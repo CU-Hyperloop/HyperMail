@@ -3,15 +3,18 @@ import { Link } from 'react-router';
 
 export default function Home() {
   return (
-    <Container className="home-container">
-      <Text className="welcome">Welcome to</Text>
-      <Title className="animated-title">HyperMail</Title>
-      <Stack h={200} bg="var(--mantine-color-body)" align="stretch" justify="center" gap="md">
-        <Button component={Link} to="/generate" size="lg" >
-          Generate email 
-        </Button>
+    <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Stack align="center" spacing="lg">
+        <Text className="welcome" size="xl" weight={500}>
+          Welcome to
+        </Text>
+        <Title className="animated-title">HyperMail</Title>
+        <Stack h={100} align="center" justify="center" spacing="md">
+          <Button component={Link} to="/generate" size="lg">
+            Generate Email
+          </Button>
+        </Stack>
       </Stack>
-
     </Container>
   );
 };

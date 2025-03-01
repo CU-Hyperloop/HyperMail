@@ -1,5 +1,4 @@
 import '@mantine/core/styles.css';
-
 import { MantineProvider } from '@mantine/core';
 import {BrowserRouter as Router, Route, Routes,  } from 'react-router';
 
