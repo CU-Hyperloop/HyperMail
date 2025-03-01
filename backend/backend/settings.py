@@ -37,9 +37,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+        # Add these lines
+    "rest_framework",
+    "corsheaders",  # For cross-origin requests from your React frontend
+    "backend",  # Your app needs to be in INSTALLED_APPS
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware", 
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
