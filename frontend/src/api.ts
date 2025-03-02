@@ -19,13 +19,28 @@ async function getCompanies(params = {}) {
   return res.data; // axios automatically parses JSON
 }
 
-export default getCompanies
-// TODO
-export function sendEmail(emailData) {
 
-  return axios.post('http://localhost:8000/api/', emailData, {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
+export async function sendEmail(emailData={}) {
+
+  const data = {
+    to_email: emailData.to_email || "harikakondur3@gmail.com",
+    subject: emailData.subject || "Medium",
+    cc_email: emailData.cc_email || "hako6198@colorado.edu",
+    message: emailData.message || "California",
+  };
+
+  try {
+    const res = await axios.post('http://localhost:8000/api/emailGenerator/send_email', data, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    return res.data; 
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw error; 
+  }
 }
+
+export default {getCompanies,sendEmail};
+;

@@ -20,6 +20,11 @@ from rest_framework.permissions import AllowAny
 from django.conf import settings
 import traceback
 
+#email
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 class EmailGeneratorViewSet(viewsets.ViewSet):
     """
     ViewSet for generating sponsorship emails using Gemini AI.
@@ -100,6 +105,65 @@ class EmailGeneratorViewSet(viewsets.ViewSet):
                 {'error': str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+    @action(detail=False, methods=['post'])
+    def send_email(self,request):
+    
+        # Fetching parameters from the request
+        to_email = request.data.get('to_email', '')
+        subject = request.data.get('subject', '')
+        message = request.data.get('message', '')
+        cc_email = request.data.get('cc_email', '')  # Optional CC email
+
+        # Check for missing required fields
+        if not to_email or not subject or not message:
+            return {
+                'status': 'error',
+                'message': 'Missing required fields: to_email, subject, message'
+            }
+
+        # Email configuration
+        sender_email = "cuhyperloop@colorado.edu"  # Replace with your email
+        sender_password = "obmq rbnx ncvx kmop"  # Replace with your app password
+        
+        # Create the MIME object
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = to_email
+        msg['Subject'] = subject
+
+        # Add CC email if provided
+        if cc_email:
+            msg['Cc'] = cc_email
+        
+        # Attach the message to the email as HTML
+        msg.attach(MIMEText(message, 'html'))
+        
+        # Collect all recipients (to + cc) for the actual send operation
+        recipients = [to_email]
+        if cc_email:
+            recipients.append(cc_email)
+
+        # Connect to the SMTP server (Gmail in this case)
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(sender_email, sender_password)
+                server.sendmail(sender_email, recipients, msg.as_string())
+
+            print(f"Email sent to: {to_email} (CC: {cc_email})") 
+
+            return {
+                'status': 'success',
+                'message': 'Email sent successfully'
+            }
+        
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': f"Failed to send email: {str(e)}"
+            }
+
 
 class CompanyViewSet(viewsets.ModelViewSet):
     """

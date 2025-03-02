@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import *
+from .services.sendEmail import send_email
 
 # Create a router and register our viewsets with it
 router = DefaultRouter()

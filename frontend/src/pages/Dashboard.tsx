@@ -17,6 +17,7 @@ import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import generateEmail from "../services/emailServices";
 import { useLocation } from "react-router";
+import { sendEmail } from "../api";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -101,10 +102,26 @@ export default function Dashboard() {
     setFeedback("");
   };
 
-  const handleSendEmail = () => {
-    // Logic to send email would go here
-    console.log("Email sent with:", { to, cc, subject, body });
-    alert("Email sent successfully!");
+  const handleSendEmail = async () => {
+    if (!to || !subject || !body) {
+      alert("Please fill in all fields before sending.");
+      return;
+    }
+  
+    const params = {
+      to_email: to,
+      subject: subject,
+      cc_email: cc,
+      message: body
+    };
+    console.log("Email sent with:", params);
+  
+    try {
+      const res = await sendEmail(params);
+      console.log("Response from email send:", res); 
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
   };
 
   return (
