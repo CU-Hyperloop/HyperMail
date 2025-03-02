@@ -1436,161 +1436,167 @@ class EmailGenerator:
 
     # NEW METHOD: Enhanced email generation with relationship intelligence
     def generate_relationship_informed_email(self, template_selection, club_info, company_info, relationship_intelligence):
-        """Generate a tailored email using relationship intelligence."""
-        log_section("GENERATING RELATIONSHIP-INFORMED EMAIL")
-        
-        selected_template = template_selection['template']
-        selection_reasoning = template_selection['reasoning']
-        
-        # Extract components of relationship intelligence
-        decision_makers = relationship_intelligence.get('decision_makers', {})
-        partnership_potential = relationship_intelligence.get('partnership_potential', {})
-        cultural_assessment = relationship_intelligence.get('cultural_assessment', {})
-        
-        # Identify primary recipient if possible
-        primary_recipient = None
-        if decision_makers:
-            # Try to find a decision maker with highest authority
-            for name, profile in decision_makers.items():
-                role = profile.get('role', '').lower()
-                if 'director' in role or 'manager' in role or 'head' in role:
-                    primary_recipient = name
-                    break
+            """Generate a tailored email using relationship intelligence."""
+            log_section("GENERATING RELATIONSHIP-INFORMED EMAIL")
             
-            # If no one with authority found, take the first one
-            if not primary_recipient and len(decision_makers) > 0:
-                primary_recipient = list(decision_makers.keys())[0]
-        
-        # Get communication style if we have a primary recipient
-        communication_style = ""
-        if primary_recipient and primary_recipient in decision_makers:
-            communication_style = decision_makers[primary_recipient].get('communication_style', '')
-        
-        # Get value propositions and recommendations
-        value_propositions = partnership_potential.get('value_propositions', '')
-        recommendations = cultural_assessment.get('recommendations', '')
-        
-        # Format club info for better readability
-        formatted_club_info = "\n\n".join([f"QUESTION: {q}\nANSWER: {a}" for q, a in club_info.items()])
-        
-        generation_prompt = PromptTemplate(
-            input_variables=["template", "selection_reasoning", "company_info", "club_info", 
-                           "primary_recipient", "communication_style", 
-                           "value_propositions", "recommendations"],
-            template="""
-            Create a highly personalized sponsorship email for CU Hyperloop using this selected template
-            and comprehensive relationship intelligence:
+            selected_template = template_selection['template']
+            selection_reasoning = template_selection['reasoning']
             
-            TEMPLATE TITLE: {template[title]}
-            TEMPLATE SUBJECT: {template[subject]}
-            TEMPLATE BODY:
-            {template[body]}
+            # Extract components of relationship intelligence
+            decision_makers = relationship_intelligence.get('decision_makers', {})
+            partnership_potential = relationship_intelligence.get('partnership_potential', {})
+            cultural_assessment = relationship_intelligence.get('cultural_assessment', {})
             
-            TEMPLATE SELECTION REASONING:
-            {selection_reasoning}
+            # Identify primary recipient if possible
+            primary_recipient = None
+            if decision_makers:
+                # Try to find a decision maker with highest authority
+                for name, profile in decision_makers.items():
+                    role = profile.get('role', '').lower()
+                    if 'director' in role or 'manager' in role or 'head' in role:
+                        primary_recipient = name
+                        break
+                
+                # If no one with authority found, take the first one
+                if not primary_recipient and len(decision_makers) > 0:
+                    primary_recipient = list(decision_makers.keys())[0]
             
-            COMPANY INFORMATION:
-            {company_info}
+            # Get communication style if we have a primary recipient
+            communication_style = ""
+            if primary_recipient and primary_recipient in decision_makers:
+                communication_style = decision_makers[primary_recipient].get('communication_style', '')
             
-            INTENDED PRIMARY RECIPIENT:
-            {primary_recipient}
+            # Get value propositions and recommendations
+            value_propositions = partnership_potential.get('value_propositions', '')
+            recommendations = cultural_assessment.get('recommendations', '')
             
-            RECIPIENT'S COMMUNICATION STYLE:
-            {communication_style}
+            # Format club info for better readability
+            formatted_club_info = "\n\n".join([f"QUESTION: {q}\nANSWER: {a}" for q, a in club_info.items()])
             
-            UNIQUE VALUE PROPOSITIONS FOR THIS COMPANY:
-            {value_propositions}
-            
-            CULTURAL COMPATIBILITY RECOMMENDATIONS:
-            {recommendations}
-            
-            CLUB INFORMATION:
-            {club_info}
-            
-            Instructions:
-            1. CRITICAL: The email MUST begin with "My name is Matis, and I am the Business Development Lead for CU Hyperloop" - do not use any other name or role
-            2. Address the email to the specific recipient if one is provided, using their name in the greeting
-            3. Match the communication style of the recipient using the provided recommendations
-            4. Incorporate 1-2 of the unique value propositions that are most likely to resonate with this specific person
-            5. Reference any personal or professional connections the recipient might have to engineering, education, or student initiatives
-            6. Use language, tone, and structure that aligns with the company's cultural preferences
-            7. Make the call to action clear and specific, tailored to the recipient's decision-making style
-            8. Keep the email under 300 words while preserving all key persuasive elements
-            
-            Return the email in this format:
-            SUBJECT: [personalized subject line]
-            
-            [complete email body]
-            """
-        )
-        
-        try:
-            prompt = generation_prompt.format(
-                template=selected_template,
-                selection_reasoning=selection_reasoning,
-                company_info=company_info,
-                club_info=formatted_club_info,
-                primary_recipient=primary_recipient or "Unknown - use generic greeting",
-                communication_style=communication_style or "Use professional, clear communication",
-                value_propositions=value_propositions,
-                recommendations=recommendations
+            generation_prompt = PromptTemplate(
+                input_variables=["template", "selection_reasoning", "company_info", "club_info", 
+                            "primary_recipient", "communication_style", 
+                            "value_propositions", "recommendations"],
+                template="""
+                Create a highly personalized sponsorship email for CU Hyperloop using this selected template
+                and comprehensive relationship intelligence:
+                
+                TEMPLATE TITLE: {template[title]}
+                TEMPLATE SUBJECT: {template[subject]}
+                TEMPLATE BODY:
+                {template[body]}
+                
+                TEMPLATE SELECTION REASONING:
+                {selection_reasoning}
+                
+                COMPANY INFORMATION:
+                {company_info}
+                
+                INTENDED PRIMARY RECIPIENT:
+                {primary_recipient}
+                
+                RECIPIENT'S COMMUNICATION STYLE:
+                {communication_style}
+                
+                UNIQUE VALUE PROPOSITIONS FOR THIS COMPANY:
+                {value_propositions}
+                
+                CULTURAL COMPATIBILITY RECOMMENDATIONS:
+                {recommendations}
+                
+                CLUB INFORMATION:
+                {club_info}
+                
+                Instructions:
+                1. CRITICAL: The email MUST begin with "Hello [company name]," followed by a line break, and THEN "My name is Matis, and I am the Business Development Lead for CU Hyperloop" - do not use any other name or role
+                2. Keep the partnership value propositions realistic and based on CU Hyperloop's EXISTING capabilities - DO NOT propose elaborate new programs or initiatives like custom challenges or research programs
+                3. Focus on established, proven benefits like: brand visibility at competitions, access to engineering talent, case studies of technology, sponsorship logo placement
+                4. Match the communication style of the recipient using the provided recommendations
+                5. Reference any personal or professional connections the recipient might have to engineering, education, or student initiatives
+                6. Use language, tone, and structure that aligns with the company's cultural preferences
+                7. Make the call to action clear and specific, tailored to the recipient's decision-making style
+                8. Keep the email under 300 words while preserving all key persuasive elements
+                
+                Return the email in this format:
+                SUBJECT: [personalized subject line]
+                
+                [complete email body]
+                """
             )
             
-            print("Generating relationship-informed email...")
-            start_time = time.time()
-            generated_email = self.llm.invoke(prompt).content
-            end_time = time.time()
-            
-            print(f"  ✓ Relationship-informed email generated successfully ({len(generated_email)} chars, {end_time - start_time:.2f}s)")
-            
-            # Verify the email starts with the required intro and fix if needed
-            if not generated_email.find("My name is Matis, and I am the Business Development Lead for CU Hyperloop") > -1:
-                print("  ⚠️ Fixing email to ensure correct introduction")
+            try:
+                prompt = generation_prompt.format(
+                    template=selected_template,
+                    selection_reasoning=selection_reasoning,
+                    company_info=company_info,
+                    club_info=formatted_club_info,
+                    primary_recipient=primary_recipient or "Unknown - use generic greeting",
+                    communication_style=communication_style or "Use professional, clear communication",
+                    value_propositions=value_propositions,
+                    recommendations=recommendations
+                )
                 
-                # Extract subject line if present
-                subject_match = re.search(r'^SUBJECT:\s*(.*?)$', generated_email, re.MULTILINE)
-                subject = subject_match.group(1).strip() if subject_match else "Partnership with CU Hyperloop"
+                print("Generating relationship-informed email...")
+                start_time = time.time()
+                generated_email = self.llm.invoke(prompt).content
+                end_time = time.time()
                 
-                # Get the body content after the SUBJECT line
-                body_content = re.sub(r'^SUBJECT:\s*.*?$\n+', '', generated_email, 1, re.MULTILINE).strip()
+                print(f"  ✓ Relationship-informed email generated successfully ({len(generated_email)} chars, {end_time - start_time:.2f}s)")
                 
-                # Replace any introduction sentence with our fixed intro
-                body_lines = body_content.split('\n')
-                first_paragraph = body_lines[0]
-                if re.search(r'(my name is|I am|I\'m)', first_paragraph, re.IGNORECASE):
-                    # Replace the first paragraph with our intro
-                    body_lines[0] = "My name is Matis, and I am the Business Development Lead for CU Hyperloop, a dynamic student team at the University of Colorado Boulder that every year designs and builds an innovative tunnel boring machine. Last year, our 12-ft long, 2000lb TBM earned us 2nd place in the world at the Boring Company's Not-A-Boring Competition, and we're poised to push even further this year."
-                else:
-                    # Insert our intro at the beginning
-                    body_lines.insert(0, "My name is Matis, and I am the Business Development Lead for CU Hyperloop, a dynamic student team at the University of Colorado Boulder that every year designs and builds an innovative tunnel boring machine. Last year, our 12-ft long, 2000lb TBM earned us 2nd place in the world at the Boring Company's Not-A-Boring Competition, and we're poised to push even further this year.")
+                # Verify the email starts with the required intro and fix if needed
+                if not generated_email.find("My name is Matis, and I am the Business Development Lead for CU Hyperloop") > -1:
+                    print("  ⚠️ Fixing email to ensure correct introduction")
+                    
+                    # Extract subject line if present
+                    subject_match = re.search(r'^SUBJECT:\s*(.*?)$', generated_email, re.MULTILINE)
+                    subject = subject_match.group(1).strip() if subject_match else "Partnership with CU Hyperloop"
+                    
+                    # Get the body content after the SUBJECT line
+                    body_content = re.sub(r'^SUBJECT:\s*.*?$\n+', '', generated_email, 1, re.MULTILINE).strip()
+                    
+                    # Replace any introduction sentence with our fixed intro
+                    body_lines = body_content.split('\n')
+                    first_paragraph = body_lines[0]
+                    
+                    # Check if it has greeting with company name
+                    greeting_match = re.search(r'^(Hi|Hello)\s+[\w\s\[\]]+,', first_paragraph)
+                    if greeting_match:
+                        # Keep the greeting but replace the rest of the paragraph
+                        greeting = greeting_match.group(0)
+                        body_lines[0] = f"{greeting}\n\nMy name is Matis, and I am the Business Development Lead for CU Hyperloop, a dynamic student team at the University of Colorado Boulder that every year designs and builds an innovative tunnel boring machine. Last year, our 12-ft long, 2000lb TBM earned us 2nd place in the world at the Boring Company's Not-A-Boring Competition, and we're poised to push even further this year."
+                    else:
+                        # Add generic greeting with company name placeholder and our intro
+                        body_lines[0] = f"Hello [company name],\n\nMy name is Matis, and I am the Business Development Lead for CU Hyperloop, a dynamic student team at the University of Colorado Boulder that every year designs and builds an innovative tunnel boring machine. Last year, our 12-ft long, 2000lb TBM earned us 2nd place in the world at the Boring Company's Not-A-Boring Competition, and we're poised to push even further this year."
+                    
+                    # Reconstruct the email
+                    fixed_email = f"SUBJECT: {subject}\n\n{'\n'.join(body_lines)}"
+                    generated_email = fixed_email
                 
-                # Reconstruct the email
-                fixed_email = f"SUBJECT: {subject}\n\n{'\n'.join(body_lines)}"
-                generated_email = fixed_email
-            
-            return generated_email
-            
-        except Exception as e:
-            error_msg = f"Error generating relationship-informed email: {str(e)}"
-            print(f"  ❌ {error_msg}")
-            
-            # Fallback to a simplified email
-            return f"""
-            SUBJECT: Partnership Opportunity with CU Hyperloop
-            
-            My name is Matis, and I am the Business Development Lead for CU Hyperloop, a dynamic student team at the University of Colorado Boulder that designs and builds innovative tunnel boring machines. We placed 2nd worldwide at the Boring Company's competition last year.
-            
-            We believe there could be a valuable partnership opportunity between our organizations and would appreciate the chance to discuss this further.
-            
-            Could we schedule a brief call this week?
-            
-            Thank you,
-            Matis
-            CU Hyperloop Team
-            
-            [Note: This is a simplified fallback email due to an error in generation: {str(e)}]
-            """
-
+                return generated_email
+                
+            except Exception as e:
+                error_msg = f"Error generating relationship-informed email: {str(e)}"
+                print(f"  ❌ {error_msg}")
+                
+                # Fallback to a simplified email
+                return f"""
+                SUBJECT: Partnership Opportunity with CU Hyperloop
+                
+                Hello [company name],
+                
+                My name is Matis, and I am the Business Development Lead for CU Hyperloop, a dynamic student team at the University of Colorado Boulder that designs and builds innovative tunnel boring machines. We placed 2nd worldwide at the Boring Company's competition last year.
+                
+                We believe there could be a valuable partnership opportunity between our organizations and would appreciate the chance to discuss this further. As a sponsor, your company would receive logo placement on our machine and materials, recognition at competitions, and access to talented engineering students.
+                
+                Could we schedule a brief call this week?
+                
+                Thank you,
+                Matis
+                CU Hyperloop Team
+                
+                [Note: This is a simplified fallback email due to an error in generation: {str(e)}]
+                """
+                
     # NEW METHOD: Enhanced workflow that incorporates relationship intelligence
     def relationship_intelligence_workflow(self, company_name, sponsorship_packet_path, fdp_path, email_template_path):
         """A comprehensive workflow that incorporates relationship intelligence for deeper personalization."""
@@ -1681,7 +1687,7 @@ if __name__ == "__main__":
         print(f"  - {file}")
     
     # Company to research
-    COMPANY_NAME = "Colas USA"
+    COMPANY_NAME = "hydro engineering consultant"
     
     # Use os.path.join to create proper paths
     # Note: We're being case-insensitive with these initial paths
