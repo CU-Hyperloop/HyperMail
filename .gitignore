@@ -3,6 +3,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macos,python,django,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,python,django,linux
 
+hypermail-env/*
 ### Django ###
 *.log
 *.pot
