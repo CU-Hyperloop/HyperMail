@@ -1,0 +1,67 @@
+TEMPLATE 1
+Title: Monetary Email Template
+
+Subject: CU Hyperloop Request
+
+Body:
+
+My name is [NAME], and I am the [ROLE] for CU Hyperloop, a dynamic student team at the University of Colorado Boulder that every year designs and builds an innovative tunnel boring machine. Last year, our 12-ft long, 2000lb TBM earned us 2nd place in the world at the Boring Company’s Not-A-Boring Competition, and we’re poised to push even further this year.
+We’re contacting you to propose a unique partnership opportunity. By collaborating with CU Hyperloop, your organization can play a pivotal role in an ambitious, high-profile project while gaining visibility through tailored case studies. These case studies will highlight your contribution’s impact, showcasing how your support enabled groundbreaking engineering solutions in a real-world, competitive environment.
+In addition to this exposure, benefits include access to our technical insights, social media features, media coverage, and acknowledgment in our sponsorship materials. As a registered 501(c)(3), all contributions are tax-deductible.
+Could we schedule a brief call this week to discuss how we might align this opportunity with your goals?
+Thank you for considering this collaboration. We’re excited about the potential to highlight your organization’s role in our journey.
+
+
+TEMPLATE 2
+Title: Parts Donation/Case Study Emphasis
+
+Subject: [PRODUCT NAME] - CU Hyperloop Request
+
+Body:
+Hi [COMPANY NAME],
+My name is [NAME], and I am the [ROLE] for CU Hyperloop, a dynamic student team at the University of Colorado Boulder that every year designs and builds an innovative tunnel boring machine. Last year, our 12-ft long, 2000lb TBM earned us 2nd place in the world at the Boring Company’s Not-A-Boring Competition, and we’re poised to push even further this year.
+We’re reaching out because we see an opportunity for a partnership with [COMPANY NAME]. We want to integrate your [PRODUCT NAME] ([LINK HERE]) directly into our machine, showcasing its capabilities as a key component of our design. By partnering with us, you'll not only have your product used in a high-profile, technically demanding project but also be featured in comprehensive case studies that detail its performance and impact.
+Our detailed case studies will serve as a powerful tool to demonstrate your product’s real-world application and effectiveness on a global stage. Along with this, you’ll benefit from exclusive access to our innovative engineering team, targeted social media exposure, and media coverage, all highlighted in our attached sponsorship packet.
+As a registered 501(c)(3), any sponsorship is tax-deductible. Could we set up a brief call for this week to explore this exciting opportunity further?
+Thank you for considering this partnership. 
+Best regards,
+
+OTHER EXAMPLES
+
+Title: Getting the TBM to Texas for Competition (funny subject)
+
+Subject: We Need a Ride… for a 2,000lb Machine
+
+Body:
+Hi [COMPANY NAME],
+My name is [NAME], and I am the [ROLE] for CU Hyperloop, a cutting-edge student team at the University of Colorado Boulder. Each year, we design and build an innovative 12-ft, 2,000-lb tunnel boring machine (TBM) to compete in The Boring Company’s Not-A-Boring Competition. Last year, our machine earned 2nd place worldwide, and this year, we’re aiming even higher.
+One of our biggest challenges (aside from digging tunnels) is actually getting our machine to Texas from Colorado. In past years, local businesses have played a crucial role in supporting our journey, and we’d love the opportunity to collaborate with you this year.
+What’s in it for you? Partnering with CU Hyperloop offers your company brand exposure via social media, competition coverage, and logo placement on our machine and website, along with recognition at a global event attended by industry leaders. Additionally we are a nonprofit organization (501(c)(3)) so any and all support is completely tax deductible.
+We would love to set up a quick call this week to explore how we can make this partnership mutually beneficial. Is there a convenient time for you to talk this Friday or another day later this week? 
+Attached: Our informational packet
+Looking forward to the opportunity to collaborate,
+Best regards,
+
+Title: Engineering Energy Companies Monetary Outreach
+
+Subject: Exploring a Partnership with CU Hyperloop
+
+Body:
+Subject: Exploring a Partnership with CU Hyperloop
+Hi [Company Name],
+We’re CU Hyperloop, a non-profit team of students designing and building a 2000 lb tunnel-boring machine, merging sustainable infrastructure with autonomous technology. For the past four years, we’ve proven our innovation on the international stage, most recently placing second in the world at the 2024 Not-A-Boring Competition.
+This year, we’re pushing the limits even further and we need visionary partners like you to make it happen. Your support can help boost cutting-edge research, development, all while empowering the next generation of engineers at CU and beyond.
+A quick call could spark a partnership that drives real impact. Are you available next week to explore this opportunity? Looking forward to connecting!
+Best,
+
+
+Title: Texas HydroVac Request
+
+Subject: Request for Hydro-Trailer/Vacuum
+
+Body:
+Hi [Company Name],
+I hope you’re doing well! My name is [Your Name], and I’m the [Your Role] for CU Hyperloop, a student-led engineering team at the University of Colorado Boulder. Each year, we design and build an advanced tunnel-boring machine to compete in The Boring Company’s Not-A-Boring Competition in Bastrop, Texas, where we recently placed 2nd in the world.
+As we prepare for this year’s competition, one of our key needs is securing a hydro-trailer/vacuum for excavating dirt during our digging operations. We’ll need it for two days March 29-30 and we’re exploring potential ways to collaborate with industry leaders like [Company Name] who share our passion for innovation.
+We’d love to discuss how we might work together and highlight [Company Name]’s support in our competition efforts. If you’re open to a quick chat, I’d be happy to find a time that works for you. Looking forward to connecting!
+Best,
