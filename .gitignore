@@ -363,3 +363,4 @@ images/
 static/
 staticfiles/
 *.pdf
+*.zip
