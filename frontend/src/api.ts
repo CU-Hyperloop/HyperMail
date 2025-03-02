@@ -31,7 +31,7 @@ export async function sendEmail(emailData={}) {
 
   try {
     console.log("Sending email with data:", data);
-    const res = await axios.post('hhttp://localhost:8000/api/emailGenerator/send_email/', data, {
+    const res = await axios.post('http://localhost:8000/api/emailGenerator/send_email/', data, {
       headers: {
         "Content-Type": "application/json"
       }
