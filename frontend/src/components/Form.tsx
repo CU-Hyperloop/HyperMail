@@ -44,14 +44,14 @@ export default function Form() {
       
       try {
         const response = await getCompanies(data);
-        console.log('API response:', response.choices[0].message.content);
-        const parsedResponse = JSON.parse(response.choices[0].message.content);
-        setApiResponse(parsedResponse);
+        console.log('API response:', response);
+        setApiResponse(response);
       } catch (err: any) {
         setError(err.message || 'An error occurred while calling the OpenAI API');
       } finally {
         setLoading(false);
         if (apiResponse){
+            console.log('navigate')
             navigate('/dashboard', { state: { data: apiResponse } });
         }
       }
@@ -93,7 +93,7 @@ export default function Form() {
               <Box mt="xl">
                 <Text fw={700} size="lg">OpenAI API Response:</Text>
                 <Code block mt="md" style={{ whiteSpace: 'pre-wrap', textAlign: 'left' }}>
-                  {apiResponse.choices[0].message.content}
+                  {apiResponse}
                 </Code>
               </Box>
             )}
