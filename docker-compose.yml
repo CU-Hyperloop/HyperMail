@@ -1,0 +1,42 @@
+services:
+  db:
+    image: ankane/pgvector
+    container_name: db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+  backend:
+    build:
+      context: ./backend
+      target: ${ENV}
+    container_name: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/usr/src/app
+    env_file:
+      - path: ${ENV_FILE:-.env}
+
+  frontend:
+    build:
+      context: ./frontend
+      target: ${ENV}
+      args:
+        API_URL: ${BACKEND_URL}
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    env_file:
+      - path: ${ENV_FILE:-.env}
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
