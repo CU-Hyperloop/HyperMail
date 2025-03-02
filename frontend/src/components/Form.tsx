@@ -3,8 +3,13 @@ import { Button, Code, Text, TextInput, Textarea, Autocomplete, Alert, Box, Load
 import { hasLength, useForm } from '@mantine/form';
 import {industries, companySizes, emailVibes} from '../data/formData';
 import { getCompanies } from '../api';
+import { useNavigate } from 'react-router';
+
 
 export default function Form() {
+
+    const navigate = useNavigate();
+
     const [loading, setLoading] = useState(false);
     const [apiResponse, setApiResponse] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
@@ -25,7 +30,6 @@ export default function Form() {
     });
     
     const handleSubmit = async (values: typeof form.values) => {
-      console.log('Submitting form with values:', values);
       setLoading(true);
       setError(null);
       setApiResponse(null);
@@ -40,12 +44,17 @@ export default function Form() {
       }
       
       try {
-        const response = getCompanies(data);
-        setApiResponse(response);
+        const response = await getCompanies(data);
+        console.log('API response:', response.choices[0].message.content);
+        const parsedResponse = JSON.parse(response.choices[0].message.content);
+        setApiResponse(parsedResponse);
       } catch (err: any) {
         setError(err.message || 'An error occurred while calling the OpenAI API');
       } finally {
         setLoading(false);
+        if (apiResponse){
+            navigate('/dashboard', { state: { data: apiResponse } });
+        }
       }
     };
     
@@ -60,7 +69,6 @@ export default function Form() {
         <form
         onSubmit={(event) => {
             event.preventDefault();
-            console.log("Form submitted!"); // Debug log
             handleSubmit(form.values);
         }}  
         >
