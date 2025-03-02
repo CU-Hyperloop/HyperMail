@@ -23,9 +23,9 @@ export default async function getCompanies(params = {}) {
 export async function sendEmail(emailData={}) {
 
   const data = {
-    to_email: emailData.to_email || "harikakondur3@gmail.com",
+    to_email: emailData.to_email || "mauh3771@colorado.edu",
     subject: emailData.subject || "Medium",
-    cc_email: emailData.cc_email || "hako6198@colorado.edu",
+    cc_email: emailData.cc_email || "mauh3771@colorado.edu",
     message: emailData.message || "California",
   };
 

@@ -108,22 +108,26 @@ class EmailGeneratorViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'])
     def send_email(self, request):
-    
-
+        """
+        Send an email to the specified recipient with optional CC.
+        """
         # Fetching parameters from the request
         to_email = request.data.get('to_email', '')
         subject = request.data.get('subject', '')
-        message = request.data.get('message', '')
+        message_body = request.data.get('message', '')
         cc_email = request.data.get('cc_email', '') 
 
-        print(f"Sending email to: {to_email}, subject: {subject}, message: {message}")
+        print(f"Sending email to: {to_email}, subject: {subject}, message: {message_body}")
 
         # Check for missing required fields
-        if not to_email or not subject or not message:
-            return {
-                'status': 'error',
-                'message': 'Missing required fields: to_email, subject, message'
-            }
+        if not to_email or not subject or not message_body:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': 'Missing required fields: to_email, subject, message'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         # Email configuration
         sender_email = "cuhyperloop@colorado.edu"  # Replace with your email
@@ -139,10 +143,12 @@ class EmailGeneratorViewSet(viewsets.ViewSet):
         if cc_email:
             msg['Cc'] = cc_email
 
-        # Initialize message variable (if not already initialized)
+        # Create HTML email with both the original message and the sponsorship packet link
         message = "<html><body>"
-
-        # Add Google Drive link to the email message
+        # First add the original message content
+        message += f"{message_body}"
+        
+        # Then add the Google Drive link to the email message
         google_drive_link = "https://drive.google.com/file/d/1NJ7zvJVgTWIznyFunZtIwvy-_WM71F5X/view?usp=sharing"
         message += f"<p>Checkout our <a href='{google_drive_link}'>2025 Sponsorship Packet</a></p>"
 
@@ -166,8 +172,10 @@ class EmailGeneratorViewSet(viewsets.ViewSet):
 
             print(f"Email sent to: {to_email} (CC: {cc_email})") 
 
-            return Response(status=status.HTTP_200_OK)
-            
+            return Response(
+                {'status': 'success', 'message': 'Email sent successfully'},
+                status=status.HTTP_200_OK
+            )
         
         except Exception as e:
             return Response(
@@ -348,5 +356,3 @@ class PromptViewSet(viewsets.ModelViewSet):
                 {"error": str(e)}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-
