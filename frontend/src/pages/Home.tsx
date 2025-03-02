@@ -1,49 +1,13 @@
 import { Button, Container } from '@mantine/core';
 import { useNavigate } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
-import '../styles/Home.css';
 
 export default function Home() {
   const navigate = useNavigate();
-  const [ghosts, setGhosts] = useState([
-    { id: 'blinky', x: 80, y: 10, color: '#FF0000' },
-    { id: 'pinky', x: 80, y: 30, color: '#FFB8FF' },
-    { id: 'inky', x: 10, y: 70, color: '#00FFFF' },
-    { id: 'clyde', x: 10, y: 90, color: '#FFB852' }
-  ]);
-  
   const [showPacman, setShowPacman] = useState(false);
   const [eatenPellets, setEatenPellets] = useState([false, false, false, false, false]);
   const pacmanRef = useRef(null);
   const pelletsRef = useRef([]);
-
-  // Animate ghosts
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Move ghosts
-      setGhosts(prev => 
-        prev.map(ghost => {
-          // Determine direction based on current position
-          const moveRight = ghost.x < 10;
-          const moveLeft = ghost.x > 80;
-          
-          // Calculate new position
-          let newX = ghost.x;
-          if (moveRight) newX += 0.5;
-          else if (moveLeft) newX -= 0.5;
-          else newX += ghost.id === 'blinky' || ghost.id === 'pinky' ? -0.5 : 0.5;
-          
-          return {
-            ...ghost,
-            x: newX,
-            y: ghost.y + (Math.random() - 0.5) * 1 // Slight random y movement
-          };
-        })
-      );
-    }, 150);
-
-    return () => clearInterval(interval);
-  }, []);
 
   // Check for pellet collisions as Pacman moves
   useEffect(() => {
@@ -91,36 +55,8 @@ export default function Home() {
 
   return (
     <Container className='home-container arcade-theme'>
-      <div className="maze">
-        <div className="dots">
-          {Array.from({ length: 30 }).map((_, i) => (
-            <div key={i} className="dot"></div>
-          ))}
-        </div>
-        
-        <div className="game-characters">
-          {/* Ghosts */}
-          {ghosts.map(ghost => (
-            <div
-              key={ghost.id}
-              className="ghost"
-              style={{
-                left: `${ghost.x}%`,
-                top: `${ghost.y}%`,
-                backgroundColor: ghost.color
-              }}
-            >
-              <div className="ghost-eyes">
-                <div className="eye"></div>
-                <div className="eye"></div>
-              </div>
-              <div className="ghost-skirt"></div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="content">
+      {/* Content first so it appears above the background */}
+      <div className="home-content">
         <h1 className="arcade-title">HYPERMAIL</h1>
         <div className="arcade-subtitle">AI SALES AGENT</div>
         

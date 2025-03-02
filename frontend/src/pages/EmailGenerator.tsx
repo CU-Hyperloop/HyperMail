@@ -2,7 +2,6 @@ import { Container, Title } from '@mantine/core';
 import Form from '../components/Form';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import '../styles/EmailGenerator.css';
 
 export default function EmailGenerator() {
 
