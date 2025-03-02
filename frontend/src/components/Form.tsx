@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Code, Text, TextInput, Textarea, Autocomplete, Alert, Box, Loader } from '@mantine/core';
 import { hasLength, useForm } from '@mantine/form';
 import {industries, companySizes, emailVibes} from '../data/formData';
-import { getCompanies } from '../api';
+import getCompanies from '../api';
 import { useNavigate } from 'react-router';
 
 

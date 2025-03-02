@@ -1,22 +1,22 @@
 import axios from 'axios';
-const BASE_URL = import.meta.env.VITE_API_URL;
 
-export async function getCompanies(params = {}) {
+async function getCompanies(params = {}) {
+  const data = {
+    industry: params.industry || "Technology",
+    size: params.size || "Medium",
+    sector: params.sector || "Software",
+    location: params.location || "California",
+    vibe: params.vibe || "Professional"
+  };
 
-  console.log(params)
-
-  const data = '{“industry”:“Technology”,“size”:“Medium”,“sector”:“Software”,“location”:“California”,“vibe”:“Professional”}'
-
-  const res = await fetch('http://localhost:8000/api/emailGenerator/generate/', {
-    method: 'POST',
+  const res = await axios.post('http://localhost:8000/api/emailGenerator/generate/', data, {
     headers: {
       "Content-Type": "application/json"
-    },
-    body: data
+    }
   });
 
-
-    console.log(res);
-
-    return res
+  console.log(res.data);
+  return res.data; // axios automatically parses JSON
 }
+
+export default getCompanies
