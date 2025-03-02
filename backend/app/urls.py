@@ -27,7 +27,6 @@ router.register(r'emails', EmailViewSet)
 router.register(r'prompts', PromptViewSet)
 router.register(r'emailGenerator', EmailGeneratorViewSet, basename='emailgenerator')
 
-
 # The API URLs are determined automatically by the router
 urlpatterns = [
     path("admin/", admin.site.urls),

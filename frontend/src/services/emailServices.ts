@@ -1,37 +1,28 @@
-export async function generateEmail(companyName: string) {
-    try {
-    console.log(`Sending request for company: ${companyName}`);
+// emailServices.ts
+const generateEmail = async (company: string) => {
+  console.log(`Sending request for company: ${company}`);
+  try {
+    const response = await fetch('http://localhost:8000/api/prompts/generate_email/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ company_name: company }),
+    });
 
-      const response = await fetch('/api/prompts/generate_email/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          company_name: companyName,
-        }),
-      });
-
-      console.log(`Response status: ${response.status}`);
-      console.log(`Response type: ${response.type}`);
-
-      // Check if response is empty
-        const text = await response.text();
-        console.log(`Raw response text: ${text.substring(0, 200)}...`);
-        
-        if (!text) {
-        throw new Error('Empty response from server');
-        }
-    
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate email');
-      }
-  
-      const data = await response.json();
-      return data.email;
-    } catch (error) {
-      console.error('Error generating email:', error);
-      throw error;
+    console.log(`Response status: ${response.status}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log('Error response:', errorText);
+      throw new Error('Failed to generate email');
     }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error generating email:', error);
+    throw error;
   }
+};
+
+export default generateEmail

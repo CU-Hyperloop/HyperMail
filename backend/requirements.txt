@@ -12,3 +12,5 @@ python-dotenv
 langchain_google_genai
 langchain_community
 google-generativeai
+pypdf
+chromadb

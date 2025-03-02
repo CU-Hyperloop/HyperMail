@@ -1,7 +1,7 @@
 import { Container, Card, Textarea, Button, TextInput, Loader } from "@mantine/core";
 import { useNavigate } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
-import { generateEmail } from '../services/emailServices';
+import generateEmail from '../services/emailServices';
 
 export default function EmailFeedback() {
     const [companyName, setCompanyName] = useState("");
@@ -23,7 +23,7 @@ export default function EmailFeedback() {
       
       try {
         const generatedEmail = await generateEmail(companyName);
-        setEmailContent(generatedEmail);
+        setEmailContent(generatedEmail.email);
       } catch (err: any) {
         setError(err.message || "Failed to generate email");
       } finally {
