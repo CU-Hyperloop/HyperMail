@@ -11,13 +11,15 @@ import {
   Tabs,
   Divider,
   Grid,
-  Col
+  Col,
+  Switch
 } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import generateEmail from "../services/emailServices";
 import { useLocation } from "react-router";
 import { sendEmail } from "../api";
+import LangGraphVisualizer from "../pages/LangGraphVisualizer";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -37,6 +39,12 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("generate");
+  
+  // Visualizer states
+  const [visualizerOpen, setVisualizerOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [keepVisualizerOpen, setKeepVisualizerOpen] = useState(false);
+  const [preferArcadeMode, setPreferArcadeMode] = useState(false);
 
   const handleCompanyClick = (company: any) => {
     // Set the company name for email generation
@@ -60,20 +68,58 @@ export default function Dashboard() {
       return;
     }
 
+    // Open the visualization popup before starting the API call
+    setVisualizerOpen(true);
+    setIsGenerating(true);
     setIsLoading(true);
     setError(null);
+    setKeepVisualizerOpen(false);
 
     try {
+      // Make the actual API call
       const generatedEmail = await generateEmail(companyName);
+      
+      // Set the email content when API call completes
       setEmailContent(generatedEmail.email);
+      
       // Auto-fill the email body with generated content
       setBody(generatedEmail.email);
+      
+      // Signal the visualizer that generation is complete
+      setIsGenerating(false);
+      
+      // Keep visualizer open for 3 more seconds after completion for better UX
+      setKeepVisualizerOpen(true);
+      setTimeout(() => {
+        if (!keepVisualizerOpen) {
+          setVisualizerOpen(false);
+        }
+      }, 3000);
+      
+      setIsLoading(false);
     } catch (err: any) {
       setError(err.message || "Failed to generate email");
-    } finally {
       setIsLoading(false);
+      setIsGenerating(false);
+      
+      // Keep visualizer open briefly to show error state
+      setTimeout(() => {
+        setVisualizerOpen(false);
+      }, 2000);
     }
   };
+
+  // Effect to allow user to close visualizer manually after completion
+  useEffect(() => {
+    if (keepVisualizerOpen) {
+      const timeout = setTimeout(() => {
+        setKeepVisualizerOpen(false);
+        setVisualizerOpen(false);
+      }, 3000);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [keepVisualizerOpen]);
 
   const handleUseEmail = () => {
     // Parse subject from the email content
@@ -124,9 +170,25 @@ export default function Dashboard() {
     }
   };
 
+  const handleCloseVisualizer = () => {
+    // Only allow closing if generation is complete
+    if (!isGenerating) {
+      setVisualizerOpen(false);
+      setKeepVisualizerOpen(false);
+    }
+  };
+
   return (
     <Container>
       <h1 className="arcade-title">Email Command Center</h1>
+
+      {/* Updated visualization popup with isGenerating prop */}
+      <LangGraphVisualizer 
+        opened={visualizerOpen} 
+        onClose={handleCloseVisualizer} 
+        companyName={companyName}
+        isGenerating={isGenerating}
+      />
 
       <Grid>
         <Grid.Col span={{ base: 12, md: 4 }}>
@@ -176,13 +238,31 @@ export default function Dashboard() {
 
               <Tabs.Panel value="generate" pt="md">
                 <Stack spacing="md">
-                  <TextInput
-                    label="Company Name"
-                    placeholder="Enter company name"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    required
-                  />
+                  <Group position="apart" align="center">
+                    <TextInput
+                      label="Company Name"
+                      placeholder="Enter company name"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      required
+                      style={{ flex: 1 }}
+                    />
+                    
+                    <div className="arcade-mode-toggle">
+                      <Switch
+                        label="Arcade Mode"
+                        checked={preferArcadeMode}
+                        onChange={(event) => setPreferArcadeMode(event.currentTarget.checked)}
+                        styles={{
+                          label: {
+                            color: 'var(--pacman-yellow)',
+                            fontFamily: '"Press Start 2P", cursive',
+                            fontSize: '0.7rem'
+                          }
+                        }}
+                      />
+                    </div>
+                  </Group>
 
                   <Button
                     onClick={handleGenerateEmail}

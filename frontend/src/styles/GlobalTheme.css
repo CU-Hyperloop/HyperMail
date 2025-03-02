@@ -632,3 +632,424 @@ h1, h2, h3, .arcade-font {
     right: 25px;
   }
 }
+
+/* Add these to the end of your GlobalTheme.css file */
+
+/* LangGraph Visualizer Styling */
+.mantine-Modal-content {
+  background-color: var(--pacman-black) !important;
+  border: 2px solid var(--pacman-blue) !important;
+  color: var(--pacman-yellow) !important;
+}
+
+.mantine-Modal-header {
+  background-color: var(--pacman-blue) !important;
+  color: var(--pacman-yellow) !important;
+  padding: 1rem !important;
+}
+
+.mantine-Modal-title {
+  color: var(--pacman-yellow) !important;
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 1rem !important;
+}
+
+.mantine-Modal-close {
+  color: var(--pacman-yellow) !important;
+}
+
+/* Timeline styling */
+.mantine-Timeline-itemBullet {
+  background-color: var(--pacman-blue) !important;
+  color: var(--pacman-yellow) !important;
+  border-color: var(--pacman-blue) !important;
+}
+
+.mantine-Timeline-itemTitle {
+  color: var(--pacman-yellow) !important;
+}
+
+.mantine-Timeline-item[data-active="true"] .mantine-Timeline-itemBullet {
+  background-color: var(--pacman-yellow) !important;
+  color: var(--pacman-blue) !important;
+}
+
+.mantine-Timeline-item[data-active="true"] .mantine-Timeline-itemTitle {
+  color: var(--pacman-yellow) !important;
+  font-weight: bold !important;
+}
+
+.mantine-Timeline-itemBody {
+  color: var(--pacman-yellow) !important;
+  opacity: 0.9;
+}
+
+/* Animation for the agent messages */
+@keyframes fadeInMessage {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.agent-message {
+  animation: fadeInMessage 0.3s ease-out forwards;
+}
+
+/* Pacman loading animation in the modal */
+.pacman-loader {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--pacman-yellow);
+  position: relative;
+  margin-right: 10px;
+  animation: eat 0.3s infinite;
+}
+
+/* Improve badge styling */
+.mantine-Badge-root {
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 0.6rem !important;
+  padding: 0.3rem 0.5rem !important;
+}
+
+/* Ghost Visualizer CSS - Add to your GlobalTheme.css */
+
+/* Main container for ghost visualization */
+.ghost-visualizer-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  background-color: var(--pacman-black);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--pacman-blue);
+  margin-bottom: 20px;
+}
+
+/* The track where ghosts and Pac-Man move */
+.ghost-maze-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: var(--pacman-black);
+  background-image: 
+    linear-gradient(to right, var(--pacman-blue) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--pacman-blue) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center;
+  opacity: 0.3;
+}
+
+/* Container for ghost agents */
+.ghost-agents-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Individual ghost agent */
+.ghost-agent {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px 20px 0 0;
+  transition: left 0.5s ease-in-out, transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Ghost eyes */
+.ghost-agent .ghost-eyes {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.ghost-agent .eye {
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%;
+  position: relative;
+}
+
+.ghost-agent .eye::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background-color: blue;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+}
+
+/* Ghost skirt (bottom wavy part) */
+.ghost-agent .ghost-skirt {
+  position: absolute;
+  bottom: -5px;
+  width: 100%;
+  height: 5px;
+  background-color: inherit;
+  clip-path: polygon(
+    0% 0%, 
+    16.6% 100%, 
+    33.3% 0%, 
+    50% 100%, 
+    66.6% 0%, 
+    83.3% 100%, 
+    100% 0%
+  );
+}
+
+/* Agent name label */
+.ghost-agent .ghost-name {
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  color: var(--pacman-yellow);
+  white-space: nowrap;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Progress bar for ghost */
+.ghost-agent .ghost-progress {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+}
+
+/* Message bubble */
+.ghost-agent .ghost-message {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--pacman-blue);
+  color: var(--pacman-yellow);
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 0 5px rgba(33, 33, 222, 0.5);
+  z-index: 5;
+}
+
+.ghost-agent .ghost-message:after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--pacman-blue);
+}
+
+/* Status for different ghost states */
+.ghost-agent.waiting {
+  filter: grayscale(80%);
+}
+
+.ghost-agent.running {
+  filter: none;
+  animation: ghostBounce 0.6s infinite alternate;
+}
+
+.ghost-agent.completed {
+  filter: brightness(1.2);
+}
+
+.ghost-agent.error {
+  filter: sepia(1);
+}
+
+/* Status information container */
+.ghost-status-info {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--pacman-blue);
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 0 10px rgba(33, 33, 222, 0.5);
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Active ghost information */
+.active-ghost-info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--pacman-blue);
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(33, 33, 222, 0.5);
+}
+
+.active-ghost-messages {
+  margin-top: 10px;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+/* Pacman character in ghost view */
+.ghost-visualizer-container .pacman-character {
+  position: absolute;
+  top: 50px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--pacman-yellow);
+  z-index: 20;
+  transition: left 0.3s ease-out;
+}
+
+.ghost-visualizer-container .pacman-eye {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  top: 10px;
+  right: 15px;
+  background: var(--pacman-black);
+}
+
+.ghost-visualizer-container .pacman-mouth {
+  background: var(--pacman-black);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(100% 74%, 44% 48%, 100% 21%);
+  animation: eat 0.3s infinite;
+}
+
+/* Pellets along the track */
+.ghost-visualizer-container .pacman-pellet {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--pacman-yellow);
+  top: 50px;
+  transform: translateY(-50%);
+  transition: opacity 0.2s ease;
+  z-index: 5;
+}
+
+.ghost-visualizer-container .pacman-pellet.eaten {
+  opacity: 0;
+}
+
+/* Animations for ghosts */
+@keyframes ghostBounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes ghostFade {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Media Queries for different screen sizes */
+@media (max-width: 768px) {
+  .ghost-visualizer-container {
+    height: 400px;
+  }
+  
+  .ghost-agent {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .ghost-agent .ghost-name {
+    font-size: 0.5rem;
+    bottom: -25px;
+  }
+  
+  .ghost-agent .ghost-progress {
+    width: 80px;
+    bottom: -15px;
+  }
+  
+  .ghost-visualizer-container .pacman-character {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .ghost-visualizer-container .pacman-eye {
+    width: 4px;
+    height: 4px;
+    top: 8px;
+    right: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .ghost-visualizer-container {
+    height: 350px;
+  }
+  
+  .ghost-agent {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .ghost-agent .eye {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .ghost-agent .eye::after {
+    width: 3px;
+    height: 3px;
+  }
+  
+  .ghost-agent .ghost-message {
+    font-size: 0.6rem;
+    max-width: 150px;
+  }
+  
+  .active-ghost-info {
+    font-size: 0.7rem;
+  }
+}
