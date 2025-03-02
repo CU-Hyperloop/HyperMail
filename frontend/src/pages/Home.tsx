@@ -53,8 +53,51 @@ export default function Home() {
     }, 3000); // 3 seconds delay to show animation
   };
 
+  // Ghost colors from the CSS variables
+  const ghostColors = [
+    '#FF0000', // Red ghost (Blinky)
+    '#FFB8FF', // Pink ghost (Pinky)
+    '#00FFFF', // Cyan ghost (Inky)
+    '#FFB852'  // Orange ghost (Clyde)
+  ];
+
   return (
     <Container className='home-container arcade-theme'>
+      {/* Animated Ghosts */}
+      <div className="edge-ghosts">
+        {/* Left side ghosts */}
+        <div className="ghost ghost-left ghost-anim-1" style={{ backgroundColor: ghostColors[0] }}>
+          <div className="ghost-eyes">
+            <div className="eye"></div>
+            <div className="eye"></div>
+          </div>
+          <div className="ghost-skirt"></div>
+        </div>
+        <div className="ghost ghost-left ghost-anim-2" style={{ backgroundColor: ghostColors[1] }}>
+          <div className="ghost-eyes">
+            <div className="eye"></div>
+            <div className="eye"></div>
+          </div>
+          <div className="ghost-skirt"></div>
+        </div>
+        
+        {/* Right side ghosts */}
+        <div className="ghost ghost-right ghost-anim-3" style={{ backgroundColor: ghostColors[2] }}>
+          <div className="ghost-eyes">
+            <div className="eye"></div>
+            <div className="eye"></div>
+          </div>
+          <div className="ghost-skirt"></div>
+        </div>
+        <div className="ghost ghost-right ghost-anim-4" style={{ backgroundColor: ghostColors[3] }}>
+          <div className="ghost-eyes">
+            <div className="eye"></div>
+            <div className="eye"></div>
+          </div>
+          <div className="ghost-skirt"></div>
+        </div>
+      </div>
+
       {/* Content first so it appears above the background */}
       <div className="home-content">
         <h1 className="arcade-title">HYPERMAIL</h1>
