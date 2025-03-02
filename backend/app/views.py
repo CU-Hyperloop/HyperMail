@@ -156,17 +156,14 @@ class EmailGeneratorViewSet(viewsets.ViewSet):
 
             print(f"Email sent to: {to_email} (CC: {cc_email})") 
 
-            return {
-                'status': 'success',
-                'message': 'Email sent successfully'
-            }
+            return Response(status=status.HTTP_200_OK)
+            
         
         except Exception as e:
-            return {
-                'status': 'error',
-                'message': f"Failed to send email: {str(e)}"
-            }
-
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 class CompanyViewSet(viewsets.ModelViewSet):
     """

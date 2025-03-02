@@ -11,7 +11,8 @@ import {
   Tabs,
   Divider,
   Grid,
-  Switch
+  Switch,
+  Modal
 } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
@@ -38,6 +39,8 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("generate");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
   
   // Visualizer states
   const [visualizerOpen, setVisualizerOpen] = useState(false);
@@ -152,21 +155,28 @@ export default function Dashboard() {
       alert("Please fill in all fields before sending.");
       return;
     }
-  
+
+    setShowConfirmation(true);
+  };
+
+  const confirmSendEmail = async () => {
     const params = {
       to_email: to,
       subject: subject,
       cc_email: cc,
       message: body
     };
-  
+
     try {
       const res = await sendEmail(params);
-      console.log("Response from email send:", res); 
+      console.log("Response from email send:", res);
     } catch (error) {
       console.error("Error sending email:", error);
     }
+
+    setShowConfirmation(false);
   };
+
 
   const handleCloseVisualizer = () => {
     // Only allow closing if generation is complete
@@ -378,6 +388,25 @@ export default function Dashboard() {
           </div>
         </Grid.Col>
       </Grid>
+
+      <Modal
+        opened={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        title="Are you sure you want to send this email?"
+      >
+        <Text>To: {to}</Text>
+        <Text>Subject: {subject}</Text>
+        <Text>CC: {cc}</Text>
+        <Text>Message: {body}</Text>
+        <Group position="right" mt="md">
+          <Button onClick={() => setShowConfirmation(false)} color="gray">
+            Cancel
+          </Button>
+          <Button onClick={confirmSendEmail} color="blue">
+            Send
+          </Button>
+        </Group>
+      </Modal>
     </Container>
   );
 }

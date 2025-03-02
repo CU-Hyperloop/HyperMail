@@ -171,6 +171,11 @@ h1, h2, h3, .arcade-font {
   background-color: var(--pacman-blue) !important;
 }
 
+.mantine-Modal-root{
+  background-color: var(--pacman-bg-dark) !important;
+  border: 2px solid var(--pacman-blue) !important;
+  color: var(--pacman-yellow) !important;
+}
 /* Inputs */
 
 .mantine-Autocomplete-dropdown{
