@@ -89,7 +89,7 @@ export default function Form() {
             {loading && (
               <Box ta="center" mt="xl">
                 <Loader size="md" />
-                <Text mt="sm">Calling OpenAI API...</Text>
+                <Text mt="sm">Calling Gemini API...</Text>
               </Box>
             )}
             
