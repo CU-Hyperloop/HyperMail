@@ -5,9 +5,10 @@ export default function MailEditor() {
         <Container size="md" style={{ 
             padding: '1rem', 
             borderRadius: '8px',
-            backgroundColor: 'transparent'  // Changed from white/light background
+            backgroundColor: 'red',  // Changed from white/light background
+            height: '100vh',
         }}>
-            <Stack spacing="md">
+            <Stack spacing="md" style={{ width: '100%' }}>
                 <Group position="apart" style={{ backgroundColor: 'transparent' }}>
                     <Text style={{ color: '#FFD700' }}>To: </Text>
                     <TextInput placeholder="To" style={{ flex: 1 }} />
@@ -25,7 +26,7 @@ export default function MailEditor() {
                 <Textarea 
                     placeholder="Body" 
                     autosize 
-                    minRows={10}
+                    minRows={15}
                     style={{ backgroundColor: 'transparent' }}
                 />
 

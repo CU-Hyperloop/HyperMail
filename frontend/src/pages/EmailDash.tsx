@@ -1,6 +1,6 @@
 import ListCompanies from "../components/ListCompanies"
 import MailEditor from "./DraftMail"
-import { TextInput, Button, Container, Stack, Group, Textarea, Text, Divider } from '@mantine/core';
+import { TextInput, Button, Container, Stack, Group, Textarea, Text, Divider, Grid } from '@mantine/core';
 import { useLocation } from "react-router";
 
 export default function EmailDash() {
@@ -15,11 +15,15 @@ export default function EmailDash() {
 
 
         <div>
-            <Group>
-                <ListCompanies />
-                <Divider></Divider>
-                <MailEditor />
-            </Group>
+            <Grid grow>
+                <Grid.Col span={4}>
+                    
+                    <ListCompanies />
+                </Grid.Col>
+                <Grid.Col span={8}>
+                    <MailEditor />
+                </Grid.Col>
+            </Grid>
 
         </div>
     )

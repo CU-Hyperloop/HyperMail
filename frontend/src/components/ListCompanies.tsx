@@ -1,7 +1,15 @@
+import {Container, Text} from '@mantine/core';
+
 export default function ListCompanies( data ){
     return (
-        <div>
-            <h1>List Companies</h1>
-        </div>
+        <Container size="md" style={{ 
+            padding: '1rem', 
+            borderRadius: '8px',
+            borderColor: 'black',
+            height: '100vh',
+        }}>
+            <Text>Companies</Text>
+        
+        </Container>
     )
 }
