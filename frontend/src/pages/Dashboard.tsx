@@ -41,19 +41,35 @@ const location = useLocation();
 const { data } = location.state || {};
 const navigate = useNavigate();
 
-// Combined state from both components
-const [companyName, setCompanyName] = useState("");
-const [to, setTo] = useState("");
-const [cc, setCc] = useState("");
-const [subject, setSubject] = useState("");
-const [body, setBody] = useState("");
-const [emailContent, setEmailContent] = useState(
-  "This is a placeholder for the generated email. Generate an email by entering a company name above."
-);
-const [feedback, setFeedback] = useState("");
-const [isLoading, setIsLoading] = useState(false);
-const [error, setError] = useState<string | null>(null);
-const [activeTab, setActiveTab] = useState("generate");
+  // Combined state from both components
+  const [companyName, setCompanyName] = useState("");
+  const [to, setTo] = useState("");
+  const [cc, setCc] = useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const [emailContent, setEmailContent] = useState(
+    "This is a placeholder for the generated email. Generate an email by entering a company name above."
+  );
+  const [feedback, setFeedback] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("generate");
+
+  const handleCompanyClick = (company: any) => {
+    // Set the company name for email generation
+    setCompanyName(company.name);
+    
+    // Also populate the To field with company email or name
+    if (company.email) {
+      setTo(company.email);
+    } else {
+      setTo(company.name);
+    }
+    
+    // Optionally, set any other fields you want to pre-populate
+    // For example, you might want to set a default subject
+    setSubject(`Partnership Opportunity with CU Hyperloop: ${company.name}`);
+  };
 
 const handleGenerateEmail = async () => {
   if (!companyName) {
@@ -64,17 +80,38 @@ const handleGenerateEmail = async () => {
   setIsLoading(true);
   setError(null);
 
-  try {
-    const generatedEmail = await generateEmail(companyName);
-    setEmailContent(generatedEmail.email);
-    // Auto-fill the email body with generated content
-    setBody(generatedEmail.email);
-  } catch (err: any) {
-    setError(err.message || "Failed to generate email");
-  } finally {
-    setIsLoading(false);
-  }
-};
+    try {
+      const generatedEmail = await generateEmail(companyName);
+      setEmailContent(generatedEmail.email);
+      // Auto-fill the email body with generated content
+      setBody(generatedEmail.email);
+    } catch (err: any) {
+      setError(err.message || "Failed to generate email");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUseEmail = () => {
+    // Parse subject from the email content
+    const subjectMatch = emailContent.match(/SUBJECT:\s*(.*?)(?:\s*\n|\s*$)/);
+    const extractedSubject = subjectMatch ? subjectMatch[1].trim() : "";
+    
+    // Parse recipient from the greeting line 
+    const recipientMatch = emailContent.match(/Hello\s+(.*?)(?:,|\s*\n)/);
+    const extractedRecipient = recipientMatch ? recipientMatch[1].trim() : "";
+    
+    // Set the extracted values
+    if (extractedSubject) setSubject(extractedSubject);
+    if (extractedRecipient) setTo(extractedRecipient);
+    
+    // Set body - remove the SUBJECT line if present
+    const bodyContent = emailContent.replace(/SUBJECT:\s*.*?\n/, '').trim();
+    setBody(bodyContent);
+    
+    // Switch to compose tab
+    setActiveTab("compose");
+  };
 
 const handleFeedbackSubmit = () => {
   console.log("Feedback submitted:", feedback);
@@ -107,43 +144,43 @@ return (
   <Container>
     <h1 className="arcade-title">Email Command Center</h1>
 
-    <Grid>
-      <Grid.Col span={{ base: 12, md: 4 }}>
-        <div className="arcade-panel company-list">
-          <Text className="arcade-font" size="lg">
-            Companies
-          </Text>
-          {data && data.length > 0 ? (
-            data.map((company: any, index: number) => (
-              <button
-                key={index}
-                className="company-item"
-                onClick={() => handleCompanyClick(company)}
-              >
-                <Text weight={600} size="lg">
-                  {company.name}
-                </Text>
-                <Text size="sm">
-                  <strong>Email:</strong> {company.email}
-                </Text>
-                <Text size="sm">
-                  <strong>Size:</strong> {company.size}
-                </Text>
-                <Text size="sm">
-                  <strong>Location:</strong> {company.location}
-                </Text>
-                <Text size="sm">
-                  <strong>Industry:</strong> {company.industry}
-                </Text>
-              </button>
-            ))
-          ) : (
-            <Text color="dimmed" align="center" mt="md">
-              No companies available
+      <Grid>
+        <Grid.Col span={{ base: 12, md: 4 }}>
+          <div className="arcade-panel company-list">
+            <Text className="arcade-font" size="lg">
+              Companies
             </Text>
-          )}
-        </div>
-      </Grid.Col>
+            {data && data.length > 0 ? (
+              data.map((company: any, index: number) => (
+                <button
+                  key={index}
+                  className="company-item"
+                  onClick={() => handleCompanyClick(company)}
+                >
+                  <Text weight={600} size="lg">
+                    {company.name}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Email:</strong> {company.email}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Size:</strong> {company.size}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Location:</strong> {company.location}
+                  </Text>
+                  <Text size="sm">
+                    <strong>Industry:</strong> {company.industry}
+                  </Text>
+                </button>
+              ))
+            ) : (
+              <Text color="dimmed" align="center" mt="md">
+                No companies available
+              </Text>
+            )}
+          </div>
+        </Grid.Col>
 
       <Grid.Col span={{ base: 12, md: 8 }}>
         <div className="arcade-panel">
@@ -194,13 +231,13 @@ return (
                   )}
                 </Card>
 
-                <Group position="right">
-                  <Button
-                    onClick={handleUseEmail}
-                  >
-                    Use This Email
-                  </Button>
-                </Group>
+                  <Group position="right">
+                    <Button
+                      onClick={handleUseEmail}
+                    >
+                      Use This Email
+                    </Button>
+                  </Group>
 
                 <Divider my="sm" />
 
