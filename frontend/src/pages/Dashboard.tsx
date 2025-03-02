@@ -17,6 +17,7 @@ import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import generateEmail from "../services/emailServices";
 import { useLocation } from "react-router";
+import LangGraphVisualizer from "../pages/LangGraphVisualizer";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -36,6 +37,9 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("generate");
+  
+  // Add new state for the visualization popup
+  const [visualizerOpen, setVisualizerOpen] = useState(false);
 
   const handleCompanyClick = (company: any) => {
     // Set the company name for email generation
@@ -59,18 +63,32 @@ export default function Dashboard() {
       return;
     }
 
+    // Open the visualization popup before starting the API call
+    setVisualizerOpen(true);
+    
     setIsLoading(true);
     setError(null);
 
     try {
-      const generatedEmail = await generateEmail(companyName);
-      setEmailContent(generatedEmail.email);
-      // Auto-fill the email body with generated content
-      setBody(generatedEmail.email);
+      // Wait a moment to let the visualizer initialize before making the actual API call
+      // This creates a better user experience as they can see the workflow starting
+      setTimeout(async () => {
+        try {
+          const generatedEmail = await generateEmail(companyName);
+          setEmailContent(generatedEmail.email);
+          // Auto-fill the email body with generated content
+          setBody(generatedEmail.email);
+        } catch (err: any) {
+          setError(err.message || "Failed to generate email");
+        } finally {
+          setIsLoading(false);
+          // Note: We're NOT closing the visualizer here to let it finish its animation
+        }
+      }, 1000);
     } catch (err: any) {
       setError(err.message || "Failed to generate email");
-    } finally {
       setIsLoading(false);
+      setVisualizerOpen(false);
     }
   };
 
@@ -107,9 +125,20 @@ export default function Dashboard() {
     alert("Email sent successfully!");
   };
 
+  const handleCloseVisualizer = () => {
+    setVisualizerOpen(false);
+  };
+
   return (
     <Container>
       <h1 className="arcade-title">Email Command Center</h1>
+
+      {/* Visualization popup */}
+      <LangGraphVisualizer 
+        opened={visualizerOpen} 
+        onClose={handleCloseVisualizer} 
+        companyName={companyName} 
+      />
 
       <Grid>
         <Grid.Col span={{ base: 12, md: 4 }}>
