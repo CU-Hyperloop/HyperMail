@@ -40,6 +40,12 @@ export default function Dashboard() {
   
   // Add new state for the visualization popup
   const [visualizerOpen, setVisualizerOpen] = useState(false);
+  
+  // New state to track if generation is still in progress for visualizer
+  const [isGenerating, setIsGenerating] = useState(false);
+  
+  // Track if we should keep visualizer open after completion
+  const [keepVisualizerOpen, setKeepVisualizerOpen] = useState(false);
 
   const handleCompanyClick = (company: any) => {
     // Set the company name for email generation
@@ -65,32 +71,56 @@ export default function Dashboard() {
 
     // Open the visualization popup before starting the API call
     setVisualizerOpen(true);
-    
+    setIsGenerating(true);
     setIsLoading(true);
     setError(null);
+    setKeepVisualizerOpen(false);
 
     try {
-      // Wait a moment to let the visualizer initialize before making the actual API call
-      // This creates a better user experience as they can see the workflow starting
-      setTimeout(async () => {
-        try {
-          const generatedEmail = await generateEmail(companyName);
-          setEmailContent(generatedEmail.email);
-          // Auto-fill the email body with generated content
-          setBody(generatedEmail.email);
-        } catch (err: any) {
-          setError(err.message || "Failed to generate email");
-        } finally {
-          setIsLoading(false);
-          // Note: We're NOT closing the visualizer here to let it finish its animation
+      // Make the actual API call
+      const generatedEmail = await generateEmail(companyName);
+      
+      // Set the email content when API call completes
+      setEmailContent(generatedEmail.email);
+      
+      // Auto-fill the email body with generated content
+      setBody(generatedEmail.email);
+      
+      // Signal the visualizer that generation is complete
+      setIsGenerating(false);
+      
+      // Keep visualizer open for 3 more seconds after completion for better UX
+      setKeepVisualizerOpen(true);
+      setTimeout(() => {
+        if (!keepVisualizerOpen) {
+          setVisualizerOpen(false);
         }
-      }, 1000);
+      }, 3000);
+      
+      setIsLoading(false);
     } catch (err: any) {
       setError(err.message || "Failed to generate email");
       setIsLoading(false);
-      setVisualizerOpen(false);
+      setIsGenerating(false);
+      
+      // Keep visualizer open briefly to show error state
+      setTimeout(() => {
+        setVisualizerOpen(false);
+      }, 2000);
     }
   };
+
+  // Effect to allow user to close visualizer manually after completion
+  useEffect(() => {
+    if (keepVisualizerOpen) {
+      const timeout = setTimeout(() => {
+        setKeepVisualizerOpen(false);
+        setVisualizerOpen(false);
+      }, 3000);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [keepVisualizerOpen]);
 
   const handleUseEmail = () => {
     // Parse subject from the email content
@@ -126,18 +156,23 @@ export default function Dashboard() {
   };
 
   const handleCloseVisualizer = () => {
-    setVisualizerOpen(false);
+    // Only allow closing if generation is complete
+    if (!isGenerating) {
+      setVisualizerOpen(false);
+      setKeepVisualizerOpen(false);
+    }
   };
 
   return (
     <Container>
       <h1 className="arcade-title">Email Command Center</h1>
 
-      {/* Visualization popup */}
+      {/* Updated visualization popup with isGenerating prop */}
       <LangGraphVisualizer 
         opened={visualizerOpen} 
         onClose={handleCloseVisualizer} 
-        companyName={companyName} 
+        companyName={companyName}
+        isGenerating={isGenerating}
       />
 
       <Grid>

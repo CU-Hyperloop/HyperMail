@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Modal, Text, Progress, Stack, Badge, Group, Box, Timeline } from '@mantine/core';
 
 // Define types for agent states
@@ -11,23 +11,37 @@ interface Agent {
   status: AgentStatus;
   progress: number;
   messages: string[];
+  estimatedDuration: number; // Time in seconds this agent typically takes
+  complexityFactor: number; // Factor between 0.8-1.5 to vary timing
 }
 
 interface LangGraphVisualizerProps {
   opened: boolean;
   onClose: () => void;
   companyName: string;
+  isGenerating: boolean; // Track if the API is still generating
 }
 
-export default function LangGraphVisualizer({ opened, onClose, companyName }: LangGraphVisualizerProps) {
+export default function LangGraphVisualizer({ opened, onClose, companyName, isGenerating }: LangGraphVisualizerProps) {
   // State for simulating agents
   const [agents, setAgents] = useState<Agent[]>([]);
   const [activeAgentIndex, setActiveAgentIndex] = useState(0);
   const [overallProgress, setOverallProgress] = useState(0);
+  const [simulationStarted, setSimulationStarted] = useState(false);
+  const simulationRef = useRef<{intervals: NodeJS.Timeout[]}>(
+    { intervals: [] }
+  );
+
+  // Reset simulation when component unmounts
+  useEffect(() => {
+    return () => {
+      simulationRef.current.intervals.forEach(interval => clearInterval(interval));
+    };
+  }, []);
 
   // Define the workflow steps/agents
   useEffect(() => {
-    if (opened) {
+    if (opened && !simulationStarted) {
       // Reset state when opened
       const initialAgents: Agent[] = [
         {
@@ -36,7 +50,9 @@ export default function LangGraphVisualizer({ opened, onClose, companyName }: La
           description: 'Analyzes company information and industry context',
           status: 'waiting',
           progress: 0,
-          messages: []
+          messages: [],
+          estimatedDuration: 20, // In seconds
+          complexityFactor: Math.random() * 0.4 + 0.8 // Between 0.8 and 1.2
         },
         {
           id: 'decision-maker-profiler',
@@ -44,7 +60,9 @@ export default function LangGraphVisualizer({ opened, onClose, companyName }: La
           description: 'Identifies key decision makers and their preferences',
           status: 'waiting',
           progress: 0,
-          messages: []
+          messages: [],
+          estimatedDuration: 25,
+          complexityFactor: Math.random() * 0.4 + 0.8
         },
         {
           id: 'value-proposition-generator',
@@ -52,7 +70,9 @@ export default function LangGraphVisualizer({ opened, onClose, companyName }: La
           description: 'Creates personalized value propositions',
           status: 'waiting', 
           progress: 0,
-          messages: []
+          messages: [],
+          estimatedDuration: 18,
+          complexityFactor: Math.random() * 0.4 + 0.8
         },
         {
           id: 'tone-analyzer',
@@ -60,7 +80,9 @@ export default function LangGraphVisualizer({ opened, onClose, companyName }: La
           description: 'Determines appropriate communication style',
           status: 'waiting',
           progress: 0,
-          messages: []
+          messages: [],
+          estimatedDuration: 15,
+          complexityFactor: Math.random() * 0.4 + 0.8
         },
         {
           id: 'email-composer',
@@ -68,19 +90,90 @@ export default function LangGraphVisualizer({ opened, onClose, companyName }: La
           description: 'Drafts the final email with all inputs',
           status: 'waiting',
           progress: 0,
-          messages: []
+          messages: [],
+          estimatedDuration: 22,
+          complexityFactor: Math.random() * 0.4 + 0.8
         }
       ];
       setAgents(initialAgents);
       setActiveAgentIndex(0);
       setOverallProgress(0);
+      setSimulationStarted(true);
       
       // Start the simulation
       simulateWorkflow(initialAgents);
     }
-  }, [opened, companyName]);
+  }, [opened, companyName, simulationStarted]);
 
-  // Simulate the workflow process
+  // Reset simulation state when modal is closed
+  useEffect(() => {
+    if (!opened) {
+      simulationRef.current.intervals.forEach(interval => clearInterval(interval));
+      simulationRef.current.intervals = [];
+      setSimulationStarted(false);
+    }
+  }, [opened]);
+
+  // Update the simulation when isGenerating changes
+  useEffect(() => {
+    if (!isGenerating && simulationStarted) {
+      // If API is done but simulation isn't, speed up completion
+      completeSimulation();
+    }
+  }, [isGenerating, simulationStarted]);
+
+  // Speed up and complete the simulation
+  const completeSimulation = () => {
+    // Clear all existing intervals
+    simulationRef.current.intervals.forEach(interval => clearInterval(interval));
+    simulationRef.current.intervals = [];
+    
+    // Complete any running agent
+    setAgents(prev => {
+      const updated = [...prev];
+      for (let i = 0; i < updated.length; i++) {
+        if (updated[i].status === 'running') {
+          updated[i].status = 'completed';
+          updated[i].progress = 100;
+        }
+      }
+      return updated;
+    });
+    
+    // Complete all remaining agents quickly
+    const remainingAgents = agents.filter(agent => agent.status === 'waiting');
+    
+    if (remainingAgents.length > 0) {
+      // Speed up remaining agents (complete all within 2-3 seconds)
+      const speedUpCompletion = setInterval(() => {
+        setAgents(prev => {
+          const updated = [...prev];
+          let allDone = true;
+          
+          for (let i = 0; i < updated.length; i++) {
+            if (updated[i].status === 'waiting') {
+              setActiveAgentIndex(i);
+              updated[i].status = 'completed';
+              updated[i].progress = 100;
+              allDone = false;
+              break;
+            }
+          }
+          
+          if (allDone) {
+            clearInterval(speedUpCompletion);
+            setOverallProgress(100);
+          }
+          
+          return updated;
+        });
+      }, 800);
+      
+      simulationRef.current.intervals.push(speedUpCompletion);
+    }
+  };
+
+  // Simulate the workflow process with more realistic timing
   const simulateWorkflow = (initialAgents: Agent[]) => {
     const agentMessages = {
       'company-researcher': [
@@ -120,56 +213,107 @@ export default function LangGraphVisualizer({ opened, onClose, companyName }: La
       ]
     };
 
-    // Process each agent sequentially
-    initialAgents.forEach((agent, index) => {
-      const startDelay = index * 3000; // Start each agent 3 seconds after the previous one
-      const progressInterval = 500; // Update progress every 500ms
-      const totalSteps = agentMessages[agent.id as keyof typeof agentMessages].length;
+    // Process agents sequentially with more realistic timing
+    let totalProcessingTime = 0;
+    
+    // Start the first agent immediately
+    processAgent(0);
+    
+    function processAgent(agentIndex: number) {
+      if (agentIndex >= initialAgents.length) return;
       
-      // Start the agent after delay
-      setTimeout(() => {
-        setActiveAgentIndex(index);
-        setAgents(prev => {
-          const updated = [...prev];
-          updated[index] = {
-            ...updated[index],
-            status: 'running',
-            progress: 0
-          };
-          return updated;
-        });
+      const agent = initialAgents[agentIndex];
+      const agentId = agent.id as keyof typeof agentMessages;
+      const messages = agentMessages[agentId];
+      
+      // Calculate realistic timing based on agent complexity
+      const totalAgentTime = agent.estimatedDuration * agent.complexityFactor * 1000; // Convert to ms
+      const messageInterval = totalAgentTime / messages.length;
+      const progressUpdateInterval = totalAgentTime / 20; // 20 progress updates per agent
+      
+      // Start the agent
+      setActiveAgentIndex(agentIndex);
+      setAgents(prev => {
+        const updated = [...prev];
+        updated[agentIndex] = {
+          ...updated[agentIndex],
+          status: 'running',
+          progress: 0
+        };
+        return updated;
+      });
+      
+      // Schedule message updates
+      messages.forEach((message, messageIndex) => {
+        const randomVariation = Math.random() * 0.4 + 0.8; // 80% to 120% of base timing
+        const messageTime = messageInterval * randomVariation * (messageIndex + 1);
         
-        // Process each message with progress updates
-        agentMessages[agent.id as keyof typeof agentMessages].forEach((message, messageIndex) => {
-          setTimeout(() => {
-            setAgents(prev => {
-              const updated = [...prev];
-              const newProgress = Math.round(((messageIndex + 1) / totalSteps) * 100);
-              
-              updated[index] = {
-                ...updated[index],
-                progress: newProgress,
-                messages: [...updated[index].messages, message]
-              };
-              
-              // Mark as complete if this is the last message
-              if (messageIndex === totalSteps - 1) {
-                updated[index].status = 'completed';
-              }
-              
-              return updated;
-            });
+        const timeout = setTimeout(() => {
+          setAgents(prev => {
+            const updated = [...prev];
+            updated[agentIndex].messages = [...updated[agentIndex].messages, message];
+            return updated;
+          });
+        }, messageTime);
+        
+        simulationRef.current.intervals.push(timeout);
+      });
+      
+      // Schedule progress updates with small variations to seem more natural
+      let progressCounter = 0;
+      const progressInterval = setInterval(() => {
+        progressCounter++;
+        
+        if (progressCounter >= 20) {
+          clearInterval(progressInterval);
+          
+          // Mark as complete and start next agent
+          setAgents(prev => {
+            const updated = [...prev];
+            updated[agentIndex] = {
+              ...updated[agentIndex],
+              status: 'completed',
+              progress: 100
+            };
+            return updated;
+          });
+          
+          // Update overall progress
+          const overallIncrement = 100 / initialAgents.length;
+          setOverallProgress(prev => 
+            Math.min(Math.round(prev + overallIncrement), 
+            agentIndex === initialAgents.length - 1 ? 100 : 99)
+          );
+          
+          // Start next agent with a small delay
+          if (agentIndex < initialAgents.length - 1) {
+            const nextAgentDelay = Math.random() * 1000 + 500; // 500-1500ms delay
+            const nextAgentTimeout = setTimeout(() => {
+              processAgent(agentIndex + 1);
+            }, nextAgentDelay);
             
-            // Update overall progress
-            setOverallProgress(prev => {
-              const agentWeight = 100 / initialAgents.length;
-              const agentContribution = agentWeight * (index + (messageIndex + 1) / totalSteps);
-              return Math.min(Math.round(agentContribution), 100);
-            });
-          }, messageIndex * 1000);
-        });
-      }, startDelay);
-    });
+            simulationRef.current.intervals.push(nextAgentTimeout);
+          }
+        } else {
+          // Update progress with small variations
+          const newProgress = Math.round((progressCounter / 20) * 100);
+          setAgents(prev => {
+            const updated = [...prev];
+            updated[agentIndex].progress = newProgress;
+            return updated;
+          });
+          
+          // Update overall progress incrementally
+          const overallIncrement = (100 / initialAgents.length) / 20;
+          setOverallProgress(prev => 
+            Math.min(Math.round(prev + overallIncrement), 
+            agentIndex === initialAgents.length - 1 && progressCounter >= 19 ? 100 : 99)
+          );
+        }
+      }, progressUpdateInterval);
+      
+      simulationRef.current.intervals.push(progressInterval);
+    }
   };
 
   // Get color based on agent status
@@ -229,6 +373,9 @@ export default function LangGraphVisualizer({ opened, onClose, companyName }: La
                    agent.status === 'completed' ? 'Completed' : 
                    'Error'}
                 </Badge>
+                {agent.status === 'running' && (
+                  <Text size="xs" color="dimmed">{agent.progress}%</Text>
+                )}
               </Group>
             }
           >
@@ -242,11 +389,20 @@ export default function LangGraphVisualizer({ opened, onClose, companyName }: La
                   color={getStatusColor(agent.status)} 
                   mt="xs" 
                   mb="xs"
+                  animated={agent.status === 'running'}
                 />
                 
                 <Stack spacing="xs" mt="sm">
                   {agent.messages.map((message, i) => (
-                    <Text key={i} size="sm" style={{ opacity: 1 - (agent.messages.length - i) * 0.15 }}>
+                    <Text 
+                      key={i} 
+                      size="sm" 
+                      className="agent-message"
+                      style={{ 
+                        opacity: 1 - (agent.messages.length - i) * 0.15,
+                        animation: `fadeInMessage ${0.3 + i * 0.1}s ease-out forwards`
+                      }}
+                    >
                       {message}
                     </Text>
                   ))}
