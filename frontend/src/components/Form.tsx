@@ -5,7 +5,6 @@ import {industries, companySizes, emailVibes} from '../data/formData';
 import getCompanies from '../api';
 import { useNavigate } from 'react-router';
 
-
 export default function Form() {
 
     const navigate = useNavigate();

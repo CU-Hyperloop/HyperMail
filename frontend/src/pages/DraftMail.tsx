@@ -1,40 +1,241 @@
-import { TextInput, Button, Container, Stack, Group, Textarea, Text } from '@mantine/core';
+import {
+  TextInput,
+  Button,
+  Container,
+  Stack,
+  Group,
+  Textarea,
+  Text,
+  Loader,
+  Card,
+  Tabs,
+  Divider,
+} from "@mantine/core";
+import { useNavigate } from "react-router";
+import { useState, useEffect, useRef } from "react";
+import generateEmail from "../services/emailServices";
 
-export default function MailEditor() {
-    return (
-        <Container size="md" style={{ 
-            padding: '1rem', 
-            borderRadius: '8px',
-            backgroundColor: 'red',  // Changed from white/light background
-            height: '100vh',
-        }}>
-            <Stack spacing="md" style={{ width: '100%' }}>
-                <Group position="apart" style={{ backgroundColor: 'transparent' }}>
-                    <Text style={{ color: '#FFD700' }}>To: </Text>
-                    <TextInput placeholder="To" style={{ flex: 1 }} />
-                </Group>
-                <Group position="apart" style={{ backgroundColor: 'transparent' }}>
-                    <Text style={{ color: '#FFD700' }}>Cc: </Text>
-                    <TextInput placeholder="Cc" style={{ flex: 1 }} />
-                </Group>
+export default function IntegratedEmailEditor() {
+  // Combined state from both components
+  const [companyName, setCompanyName] = useState("");
+  const [to, setTo] = useState("");
+  const [cc, setCc] = useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const [emailContent, setEmailContent] = useState(
+    "This is a placeholder for the generated email. Generate an email by entering a company name above."
+  );
+  const [feedback, setFeedback] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState("compose");
 
-                <Group position="apart" style={{ backgroundColor: 'transparent' }}>
-                    <Text style={{ color: '#FFD700' }}>Subject: </Text>
-                    <TextInput placeholder="Subject" style={{ flex: 1 }} />
-                </Group>
-                
-                <Textarea 
-                    placeholder="Body" 
-                    autosize 
-                    minRows={15}
-                    style={{ backgroundColor: 'transparent' }}
-                />
+  const handleGenerateEmail = async () => {
+    if (!companyName) {
+      setError("Please enter a company name");
+      return;
+    }
 
-                <Group position="right" style={{ backgroundColor: 'transparent' }}>
-                    <Button variant="outline" color="blue">Cancel</Button>
-                    <Button color="blue">Send</Button>
-                </Group>
-            </Stack>
-        </Container>
-    );
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const generatedEmail = await generateEmail(companyName);
+      setEmailContent(generatedEmail.email);
+      // Auto-fill the email body with generated content
+      setBody(generatedEmail.email);
+    } catch (err) {
+      setError(err.message || "Failed to generate email");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFeedbackSubmit = () => {
+    console.log("Feedback submitted:", feedback);
+    alert("Feedback submitted successfully!");
+    setFeedback("");
+  };
+
+  const handleSendEmail = () => {
+    // Logic to send email would go here
+    console.log("Email sent with:", { to, cc, subject, body });
+    alert("Email sent successfully!");
+  };
+
+  return (
+    <Container
+      size="md"
+      style={{
+        padding: "1.5rem",
+        borderRadius: "8px",
+        // backgroundColor: "#f8f9fa", // Using a neutral background instead of red
+        minHeight: "100vh",
+      }}
+    >
+      <h1
+        style={{
+          textAlign: "center",
+          marginBottom: "1.5rem",
+          fontFamily: '"Press Start 2P", cursive', // Arcade-style font
+        //   color: "#333",
+        }}
+      >
+        Email Composer & Generator
+      </h1>
+
+      <Tabs value={activeTab} onChange={setActiveTab}>
+        <Tabs.List>
+          <Tabs.Tab value="compose">Compose Email</Tabs.Tab>
+          <Tabs.Tab value="generate">Generate Content</Tabs.Tab>
+        </Tabs.List>
+
+        <Tabs.Panel value="compose" pt="md">
+          <Stack spacing="md" style={{ width: "100%" }}>
+            <Group position="apart">
+              <Text style={{ width: "60px" }}>To: </Text>
+              <TextInput
+                placeholder="Recipients"
+                style={{ flex: 1 }}
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+              />
+            </Group>
+
+            <Group position="apart">
+              <Text style={{ width: "60px" }}>Cc: </Text>
+              <TextInput
+                placeholder="Carbon copy"
+                style={{ flex: 1 }}
+                value={cc}
+                onChange={(e) => setCc(e.target.value)}
+              />
+            </Group>
+
+            <Group position="apart">
+              <Text style={{ width: "60px" }}>Subject: </Text>
+              <TextInput
+                placeholder="Subject line"
+                style={{ flex: 1 }}
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
+            </Group>
+
+            <Text>Body:</Text>
+            <Textarea
+              placeholder="Email body"
+              autosize
+              minRows={15}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              style={{ border: "1px solid #ddd" }}
+            />
+
+            <Group position="right">
+              <Button variant="outline">
+                Cancel
+              </Button>
+              <Button onClick={handleSendEmail}>
+                Send
+              </Button>
+            </Group>
+          </Stack>
+        </Tabs.Panel>
+
+        <Tabs.Panel value="generate" pt="md">
+          <div style={{ marginBottom: "1.5rem" }}>
+            <TextInput
+              label="Company Name"
+              placeholder="Enter company name"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              required
+              style={{ marginBottom: "1rem" }}
+            />
+
+            <Button
+              size="md"
+              onClick={handleGenerateEmail}
+              loading={isLoading}
+              disabled={isLoading || !companyName}
+              style={{ marginBottom: "1rem" }}
+            >
+              Generate Email
+            </Button>
+
+            {error && (
+              <Text color="red" size="sm" style={{ marginTop: "0.5rem" }}>
+                {error}
+              </Text>
+            )}
+          </div>
+
+          <Text weight={600} size="lg" style={{ marginBottom: "0.5rem" }}>
+            Generated Email:
+          </Text>
+
+          <Card
+            shadow="sm"
+            p="lg"
+            style={{
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+              marginBottom: "1rem",
+            }}
+          >
+            {isLoading ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "2rem",
+                }}
+              >
+                <Loader size="lg" />
+                <Text style={{ marginTop: "1rem" }}>
+                  Generating email... This may take a minute...
+                </Text>
+              </div>
+            ) : (
+              <div style={{ whiteSpace: "pre-line" }}>{emailContent}</div>
+            )}
+          </Card>
+
+          <Group position="right" pd="md" m="md">
+            <Button
+              color="blue"
+              size="lg"
+              onClick={() => {
+                setBody(emailContent);
+                setActiveTab("compose");
+              }}
+            >
+              Use This Email
+            </Button>
+          </Group>
+          <Divider/>
+          <Text weight={600} size="lg" style={{ marginBottom: "0.5rem" }}>
+            Provide Feedback:
+          </Text>
+
+          <Textarea
+            placeholder="Write your feedback here..."
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            minRows={6}
+            style={{ marginBottom: "1rem" }}
+          />
+
+          <Button
+            onClick={handleFeedbackSubmit}
+            disabled={!feedback.trim()}
+          >
+            Submit Feedback
+          </Button>
+        </Tabs.Panel>
+      </Tabs>
+    </Container>
+  );
 }
