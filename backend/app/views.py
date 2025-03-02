@@ -138,7 +138,17 @@ class EmailGeneratorViewSet(viewsets.ViewSet):
         # Add CC email if provided
         if cc_email:
             msg['Cc'] = cc_email
-        
+
+        # Initialize message variable (if not already initialized)
+        message = "<html><body>"
+
+        # Add Google Drive link to the email message
+        google_drive_link = "https://drive.google.com/file/d/1NJ7zvJVgTWIznyFunZtIwvy-_WM71F5X/view?usp=sharing"
+        message += f"<p>Checkout our <a href='{google_drive_link}'>2025 Sponsorship Packet</a></p>"
+
+        # Close the HTML tags for the message
+        message += "</body></html>"
+
         # Attach the message to the email as HTML
         msg.attach(MIMEText(message, 'html'))
         
