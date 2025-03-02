@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.home-container .animated-title {
+  font-size: 12rem; /* Increase the font size */
+  font-weight: 700;
+  background: linear-gradient(to right, var(--mantine-color-gray-7), var(--mantine-color-brightOrange-5));
+  -webkit-background-clip: text;
+  margin-bottom: 40px;
+  color: transparent;
+  animation: fadeIn 2s ease-in-out;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(-50px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.description {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.home-container .welcome {
+    font-size: 3rem;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 390px) {
+
+  .home-container .animated-title {
+    font-size: 6rem; /* Increase the font size */
+    font-weight: 700;
+    background: linear-gradient(to right, var(--mantine-color-gray-7), var(--mantine-color-brightOrange-5));
+    -webkit-background-clip: text;
+    margin-bottom: 40px;
+    color: transparent;
+    animation: fadeIn 2s ease-in-out;
+    text-align: center;
+  }
+}
+
+/* ipad screen size */
+@media (max-width: 1024px) {
+  .home-container .animated-title {
+    font-size: 4rem; /* Decrease the font size */
+  }
+}
