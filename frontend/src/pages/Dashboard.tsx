@@ -38,7 +38,7 @@ export default function Dashboard() {
   const [feedback, setFeedback] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("compose");
+  const [activeTab, setActiveTab] = useState("generate");
 
   const handleGenerateEmail = async () => {
     if (!companyName) {
@@ -124,7 +124,7 @@ export default function Dashboard() {
                   marginBottom: "1rem",
                   textAlign: "left",
                 }}
-                onClick={() => window.open(company.website, "_blank")}
+                onClick={() => setCompanyName(company.name)}
               >
                 <Text weight={600} size="lg">{company.name}</Text>
                 <Text size="sm"><strong>Email:</strong> {company.email}</Text>
