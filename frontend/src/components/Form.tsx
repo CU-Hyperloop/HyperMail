@@ -22,7 +22,7 @@ export default function Form() {
       return (
         <form onSubmit={form.onSubmit(setSubmittedValues)}>
             <Autocomplete {...form.getInputProps('industry')}  data= {industries} label="Industry" placeholder="Name" />
-            <Autocomplete {...form.getInputProps('size')}  data = {companySizes} mt="md" label="Size" placeholder="size" />
+            <Autocomplete {...form.getInputProps('size')}  data = {companySizes} mt="md" label="Size" placeholder="Size" />
             <TextInput {...form.getInputProps('sector')} mt="md" label="Sector" placeholder="Sector" />
             <TextInput {...form.getInputProps('location')} mt="md" label="Location" placeholder="Location" />
             <Autocomplete {...form.getInputProps('vibe')} data = {emailVibes} mt="md" label="Email Vibe" placeholder="Vibe" />
