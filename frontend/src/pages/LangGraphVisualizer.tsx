@@ -516,10 +516,6 @@ export default function LangGraphVisualizer({ opened, onClose, companyName, isGe
             <Text>Elapsed: {formatTime(elapsedTime)}</Text>
           </div>
           <div className="status-item">
-            <SimpleIcons.Clock />
-            <Text>Remaining: {formatTime(estimatedTimeRemaining)}</Text>
-          </div>
-          <div className="status-item">
             <Badge size="lg" color="blue">{overallProgress}% Complete</Badge>
           </div>
         </div>

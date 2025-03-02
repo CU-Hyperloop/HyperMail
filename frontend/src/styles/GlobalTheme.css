@@ -1053,3 +1053,106 @@ h1, h2, h3, .arcade-font {
     font-size: 0.7rem;
   }
 }
+
+/* Add these styles to your GlobalTheme.css file */
+
+/* Edge Ghosts Container */
+.edge-ghosts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Ghost positioning on edges */
+.ghost-left {
+  left: 5%;
+}
+
+.ghost-right {
+  right: 5%;
+}
+
+/* Individual ghost animations */
+.ghost-anim-1 {
+  top: 20%;
+  animation: ghostFloatUpDown 4s ease-in-out infinite;
+}
+
+.ghost-anim-2 {
+  top: 60%;
+  animation: ghostFloatUpDown 5s ease-in-out infinite 1s; /* offset timing */
+}
+
+.ghost-anim-3 {
+  top: 30%;
+  animation: ghostFloatUpDown 5.5s ease-in-out infinite 0.5s; /* offset timing */
+}
+
+.ghost-anim-4 {
+  top: 70%;
+  animation: ghostFloatUpDown 6s ease-in-out infinite 1.5s; /* offset timing */
+}
+
+/* Ghost floating animation */
+@keyframes ghostFloatUpDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(40px);
+  }
+}
+
+/* Animation for ghosts looking around (eye movement) */
+.ghost-left .eye::after {
+  animation: ghostEyesLeft 3s ease-in-out infinite;
+}
+
+.ghost-right .eye::after {
+  animation: ghostEyesRight 3s ease-in-out infinite;
+}
+
+@keyframes ghostEyesLeft {
+  0%, 100% { left: 1px; }
+  50% { left: 2px; }
+}
+
+@keyframes ghostEyesRight {
+  0%, 100% { left: 1px; }
+  50% { left: 0; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ghost-left {
+    left: 2%;
+  }
+  
+  .ghost-right {
+    right: 2%;
+  }
+  
+  @keyframes ghostFloatUpDown {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(30px);
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  @keyframes ghostFloatUpDown {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(20px);
+    }
+  }
+}
