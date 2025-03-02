@@ -220,7 +220,7 @@ class PromptViewSet(viewsets.ModelViewSet):
             # Get company name from request data
             print(f"Received request: {request.data}")
             company_name = request.data.get('company_name')
-            company_name = "hydro engineering consultant"
+            # company_name = "hydro engineering consultant"
             if not company_name:
                 return Response(
                     {"error": "Company name is required"}, 
