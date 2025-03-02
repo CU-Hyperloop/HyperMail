@@ -1,0 +1,276 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.draft-mail-container {
+  background-color: #000;
+  font-family: 'Press Start 2P', cursive;
+  color: #FFD700;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+  max-width: 100%;
+}
+
+.arcade-theme {
+  background-color: #000;
+}
+
+.maze {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.dots {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: #FFD700;
+  border-radius: 50%;
+  margin: 40px;
+}
+
+.game-characters {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.ghost {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px 15px 0 0;
+  transition: transform 0.3s ease;
+}
+
+.ghost:hover {
+  transform: scale(1.2);
+}
+
+.ghost-eyes {
+  position: absolute;
+  top: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.eye {
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 50%;
+  position: relative;
+}
+
+.eye::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: blue;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+}
+
+.ghost-skirt {
+  position: absolute;
+  bottom: -6px;
+  width: 100%;
+  height: 6px;
+  background-color: inherit;
+  clip-path: polygon(
+    0% 0%, 
+    16.6% 100%, 
+    33.3% 0%, 
+    50% 100%, 
+    66.6% 0%, 
+    83.3% 100%, 
+    100% 0%
+  );
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  border: 2px solid #2121DE;
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  box-shadow: 0 0 10px #2121DE, 0 0 20px #2121DE, 0 0 30px #2121DE;
+}
+
+.arcade-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 2.5rem;
+  color: #FFD700;
+  margin-bottom: 20px;
+  text-shadow: 
+    3px 3px 0 #2121DE,
+    -3px -3px 0 #2121DE,
+    3px -3px 0 #2121DE,
+    -3px 3px 0 #2121DE;
+  letter-spacing: 2px;
+  animation: blink 1s infinite;
+}
+
+/* Mail editor styling */
+.mail-editor-wrapper {
+  background-color: rgba(33, 33, 222, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 800px;
+  border: 2px solid #2121DE;
+}
+
+/* Fix for the container with white background */
+.mail-editor-wrapper .mantine-Container-root {
+  background-color: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Override Mantine form elements to match arcade theme */
+.mail-editor-wrapper input,
+.mail-editor-wrapper textarea {
+  background-color: #000 !important;
+  color: #FFD700 !important;
+  border: 2px solid #2121DE !important;
+  border-radius: 0 !important;
+  font-family: 'Arial', sans-serif !important;
+  font-size: 0.9rem !important;
+}
+
+/* Fix the white background in the form */
+.mail-editor-wrapper .mantine-Stack-root {
+  background: transparent !important;
+}
+
+.mail-editor-wrapper .mantine-Group-root {
+  background: transparent !important;
+}
+
+.mail-editor-wrapper input::placeholder,
+.mail-editor-wrapper textarea::placeholder {
+  color: #FFD700 !important;
+  opacity: 0.5;
+}
+
+.mail-editor-wrapper button {
+  background-color: #2121DE !important;
+  color: #FFD700 !important;
+  font-family: 'Press Start 2P', cursive !important;
+  border: none !important;
+  font-size: 0.8rem !important;
+  padding: 10px 20px !important;
+  margin-top: 20px !important;
+}
+
+.mail-editor-wrapper button:hover {
+  background-color: #FF0000 !important;
+  transform: scale(1.05);
+}
+
+.mail-editor-wrapper .mantine-Text-root {
+  color: #FFD700 !important;
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 0.8rem !important;
+}
+
+@keyframes blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0.8;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .arcade-title {
+    font-size: 1.8rem;
+  }
+  
+  .dot {
+    width: 6px;
+    height: 6px;
+    margin: 30px;
+  }
+  
+  .ghost {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .mail-editor-wrapper {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .arcade-title {
+    font-size: 1.2rem;
+  }
+  
+  .dot {
+    width: 4px;
+    height: 4px;
+    margin: 20px;
+  }
+  
+  .ghost {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .eye {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .eye::after {
+    width: 3px;
+    height: 3px;
+  }
+  
+  .mail-editor-wrapper {
+    padding: 10px;
+  }
+  
+  .mail-editor-wrapper input,
+  .mail-editor-wrapper textarea,
+  .mail-editor-wrapper button,
+  .mail-editor-wrapper .mantine-Text-root {
+    font-size: 0.7rem !important;
+  }
+}
