@@ -362,5 +362,4 @@ data.json
 images/
 static/
 staticfiles/
-*.pdf
 *.zip

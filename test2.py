@@ -1569,7 +1569,8 @@ class EmailGenerator:
                         body_lines[0] = f"Hello [company name],\n\nMy name is Matis, and I am the Business Development Lead for CU Hyperloop, a dynamic student team at the University of Colorado Boulder that every year designs and builds an innovative tunnel boring machine. Last year, our 12-ft long, 2000lb TBM earned us 2nd place in the world at the Boring Company's Not-A-Boring Competition, and we're poised to push even further this year."
                     
                     # Reconstruct the email
-                    fixed_email = f"SUBJECT: {subject}\n\n{'\n'.join(body_lines)}"
+                    # fixed_email = f"SUBJECT: {subject}\n\n{'\n'.join(body_lines)}"
+                    fixed_email = f"SUBJECT: {subject}\n\n" + "\n".join(body_lines)
                     generated_email = fixed_email
                 
                 return generated_email
