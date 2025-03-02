@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 
 from .models import Company, Template, Email, Prompt
 from .serializers import *
-from .test import EmailGenerator 
+from .test2 import EmailGenerator 
 
 import os
 
@@ -230,7 +230,8 @@ class PromptViewSet(viewsets.ModelViewSet):
             # Set paths to your files 
             SPONSORSHIP_PACKET_PATH = "./data/sponsorShipPacket.pdf"
             FDP_PATH = "./data/fdp.pdf"
-            EMAIL_TEMPLATE_PATH = "./data/emailTemplates.pdf"
+            # EMAIL_TEMPLATE_PATH = "./data/emailTemplates.pdf"
+            EMAIL_TEMPLATE_PATH = "./data/emailTemplates.txt"
 
             import os
             # Check if files exist
@@ -251,7 +252,14 @@ class PromptViewSet(viewsets.ModelViewSet):
                 )
                 
             # Generate the email
-            response_email = email_generator.sponsorship_email_workflow(
+            # response_email = email_generator.sponsorship_email_workflow(
+            #     company_name=company_name,
+            #     sponsorship_packet_path=SPONSORSHIP_PACKET_PATH,
+            #     fdp_path=FDP_PATH,
+            #     email_template_path=EMAIL_TEMPLATE_PATH
+            # )
+
+            response_email = email_generator.relationship_intelligence_workflow(
                 company_name=company_name,
                 sponsorship_packet_path=SPONSORSHIP_PACKET_PATH,
                 fdp_path=FDP_PATH,
