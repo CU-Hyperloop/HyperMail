@@ -17,7 +17,7 @@ export default async function getCompanies(params = {}) {
 
   console.log(res.data);
   return res.data; // axios automatically parses JSON
-}
+};
 
 
 export async function sendEmail(emailData={}) {
