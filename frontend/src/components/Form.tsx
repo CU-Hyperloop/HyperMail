@@ -1,60 +1,13 @@
 import { useState } from 'react';
 import { Button, Code, Text, TextInput, Textarea, Autocomplete, Alert, Box, Loader } from '@mantine/core';
 import { hasLength, useForm } from '@mantine/form';
-
-const openAIKey = import.meta.env.VITE_APP_OPENAI_API_KEY;
-
-
-// Keeping the original data from your component
-const industries = [
-  "Construction",
-  "Mining",
-  "Infrastructure",
-  "Civil Engineering",
-  "Transportation",
-  "Urban Development",
-  "Water and Wastewater Management",
-  "Oil and Gas",
-  "Environmental Services",
-  "Railways",
-  "Energy (Renewable and Non-Renewable)",
-  "Geotechnical Engineering",
-  "Government and Public Sector",
-  "Heavy Machinery Manufacturing",
-  "Road and Highway Construction",
-  "Utilities (Power, Gas, Water)",
-  "Tunneling and Subsurface Construction",
-  "Maritime and Port Construction",
-  "Building and Real Estate Development",
-  "Smart Cities and Urban Planning"
-];
-
-const companySizes = [
-  "Micro (1-9 employees)",
-  "Small (10-49 employees)",
-  "Medium (50-249 employees)",
-  "Large (250-999 employees)",
-  "Enterprise (1000+ employees)"
-];
-
-const emailVibes = [
-  "Professional",
-  "Casual",
-  "Friendly",
-  "Concise",
-  "Empathetic",
-  "Optimistic",
-  "Polite",
-  "Enthusiastic"
-];
-
+import {industries, companySizes, emailVibes} from '../data/formData';
+import { getCompanies } from '../api';
 
 export default function Form() {
     const [loading, setLoading] = useState(false);
     const [apiResponse, setApiResponse] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
-
-    // console.log(openAIKey)
     
     const form = useForm({
         mode: 'controlled',
@@ -68,7 +21,6 @@ export default function Form() {
         },
         validate: {
           industry: hasLength({ min: 2 }, 'Industry is required'),
-          apiKey: hasLength({ min: 1 }, 'OpenAI API Key is required'),
         },
     });
     
@@ -77,39 +29,19 @@ export default function Form() {
       setLoading(true);
       setError(null);
       setApiResponse(null);
+
+      const data = {
+        industry: values.industry,
+        size: values.size,
+        sector: values.sector,
+        location: values.location,
+        vibe: values.vibe,
+        details: values.details
+      }
       
       try {
-        console.log(openAIKey)
-        // Call OpenAI API with form values
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${openAIKey}`
-          },
-          body: JSON.stringify({
-            model: 'gpt-4',
-            messages: [
-              {
-                role: 'system',
-                content: 'You are a helpful assistant that finds companies matching specific criteria.'
-              },
-              {
-                role: 'user',
-                content: `Find 3 companies that match these criteria: Industry: ${values.industry}, Size: ${values.size || 'Any'}, Location: ${values.location || 'Any'}, Sector: ${values.sector || 'Any'}. For each company, provide the name, website or email, and a brief description.`
-              }
-            ],
-            temperature: 0.7
-          })
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`API error: ${errorData.error?.message || response.statusText}`);
-        }
-
-        const data = await response.json();
-        setApiResponse(data);
+        const response = getCompanies(data);
+        setApiResponse(response);
       } catch (err: any) {
         setError(err.message || 'An error occurred while calling the OpenAI API');
       } finally {
@@ -126,15 +58,12 @@ export default function Form() {
         )}
         
         <form
-  onSubmit={(event) => {
-    event.preventDefault();
-    console.log("Form submitted!"); // Debug log
-    handleSubmit(form.values);
-  }}
->
-
-            
-            
+        onSubmit={(event) => {
+            event.preventDefault();
+            console.log("Form submitted!"); // Debug log
+            handleSubmit(form.values);
+        }}  
+        >
             <Autocomplete {...form.getInputProps('industry')} data={industries} label="Industry" placeholder="Name" required mt="md" />
             <Autocomplete {...form.getInputProps('size')} data={companySizes} mt="md" label="Size" placeholder="Size" />
             <TextInput {...form.getInputProps('sector')} mt="md" label="Sector" placeholder="Sector" />

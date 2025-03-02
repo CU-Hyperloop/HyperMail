@@ -21,3 +21,21 @@ export const industries = [
     "Smart Cities and Urban Planning"
   ];
   
+export const companySizes = [
+    "Micro (1-9 employees)",
+    "Small (10-49 employees)",
+    "Medium (50-249 employees)",
+    "Large (250-999 employees)",
+    "Enterprise (1000+ employees)"
+  ];
+  
+export const emailVibes = [
+    "Professional",
+    "Casual",
+    "Friendly",
+    "Concise",
+    "Empathetic",
+    "Optimistic",
+    "Polite",
+    "Enthusiastic"
+  ];

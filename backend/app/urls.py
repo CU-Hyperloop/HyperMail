@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CompanyViewSet, TemplateViewSet, EmailViewSet, PromptViewSet
+from .views import *
 
 # Create a router and register our viewsets with it
 router = DefaultRouter()
@@ -25,9 +25,10 @@ router.register(r'companies', CompanyViewSet)
 router.register(r'templates', TemplateViewSet)
 router.register(r'emails', EmailViewSet)
 router.register(r'prompts', PromptViewSet)
+router.register(r'emailGenerator', EmailGeneratorViewSet, basename='emailgenerator')
 
 # The API URLs are determined automatically by the router
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include(router.urls)),  # All API endpoints under /api/
+    path("", include(router.urls)),  # All API endpoints under /api/
 ]
