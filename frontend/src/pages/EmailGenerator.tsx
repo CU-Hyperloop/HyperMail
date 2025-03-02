@@ -1,9 +1,11 @@
 import { Container, Title } from '@mantine/core';
 import Form from '../components/Form';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import '../styles/EmailGenerator.css';
 
 export default function EmailGenerator() {
+
   const [ghosts, setGhosts] = useState([
     // Left side ghosts
     { id: 'blinky', x: 5, y: 20, color: '#FF0000', direction: 1, speed: 0.6 },
@@ -12,6 +14,8 @@ export default function EmailGenerator() {
     { id: 'inky', x: 95, y: 30, color: '#00FFFF', direction: 1, speed: 0.5 },
     { id: 'clyde', x: 95, y: 70, color: '#FFB852', direction: -1, speed: 0.3 }
   ]);
+  
+  const navigate = useNavigate();
 
   // Animate ghosts vertically
   useEffect(() => {
