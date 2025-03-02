@@ -1,0 +1,37 @@
+# Base stage for both dev and prod
+FROM node:20-alpine AS base
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
+
+# Install all dependencies
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Set build-time argument to specify API_URL
+ARG API_URL=https://example.com
+ENV VITE_API_URL=$API_URL
+
+EXPOSE 5173
+
+# Final production image
+FROM base AS production
+
+RUN npm run build
+
+RUN npm install -g serve
+
+# Start the production server
+
+CMD ["serve", "-s", "build", "-l", "5173", "--single"]
+
+# Development stage (for Docker Compose)
+FROM base AS development
+
+# Start the development server
+CMD ["npm", "run", "dev"]
