@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { MantineProvider, createTheme } from '@mantine/core';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router';
 
 // Import the global theme CSS
 import './styles/GlobalTheme.css';

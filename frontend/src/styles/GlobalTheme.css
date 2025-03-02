@@ -172,8 +172,16 @@ h1, h2, h3, .arcade-font {
 }
 
 /* Inputs */
+
+.mantine-Autocomplete-dropdown{
+  background-color: var(--pacman-bg-dark) !important;
+  border: 2px solid var(--pacman-blue) !important;
+}
+
+
 .mantine-TextInput-input,
 .mantine-Textarea-input,
+.mantine-Autocomplete-input,
 .mantine-Select-input {
   background-color: var(--pacman-bg-dark) !important;
   color: var(--pacman-yellow) !important;
@@ -185,6 +193,7 @@ h1, h2, h3, .arcade-font {
 
 .mantine-TextInput-label,
 .mantine-Textarea-label,
+.mantine-Autocomplete-label
 .mantine-Select-label {
   color: var(--pacman-yellow) !important;
   font-family: 'Arial', sans-serif !important;
@@ -262,6 +271,13 @@ h1, h2, h3, .arcade-font {
   border-color: var(--pacman-yellow) !important;
 }
 
+.mantine-Code-root {
+  background-color: var(--pacman-bg-panel) !important;
+  color: var(--pacman-yellow) !important;
+  border: 2px solid var(--pacman-blue) !important;
+  border-radius: 4px !important;
+  padding: 0.5rem !important;
+}
 /* Email Content Area */
 .email-content {
   white-space: pre-line;

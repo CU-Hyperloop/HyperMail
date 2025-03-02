@@ -12,16 +12,19 @@ import {
   Divider,
   Grid,
   Col
+  
 } from "@mantine/core";
+
+
 import { useNavigate } from "react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import generateEmail from "../services/emailServices";
 import { useLocation } from "react-router";
 
 export default function Dashboard() {
-  const location = useLocation();
-  const { data } = location.state || {};
-  const navigate = useNavigate();
+
+    const location = useLocation();
+    const { data } = location.state || {};
 
   // Combined state from both components
   const [companyName, setCompanyName] = useState("");
@@ -34,7 +37,7 @@ export default function Dashboard() {
   );
   const [feedback, setFeedback] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("generate");
 
   const handleGenerateEmail = async () => {
@@ -51,7 +54,7 @@ export default function Dashboard() {
       setEmailContent(generatedEmail.email);
       // Auto-fill the email body with generated content
       setBody(generatedEmail.email);
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message || "Failed to generate email");
     } finally {
       setIsLoading(false);
@@ -66,189 +69,239 @@ export default function Dashboard() {
 
   const handleSendEmail = () => {
     // Logic to send email would go here
+    
     console.log("Email sent with:", { to, cc, subject, body });
     alert("Email sent successfully!");
   };
 
   return (
-    <Container>
-      <h1 className="arcade-title">Email Command Center</h1>
+    <>
+
+    <Container
+      size="md"
+      style={{
+        padding: "1.5rem",
+        borderRadius: "8px",
+        minHeight: "100vh",
+      }}
+    >
+      <h1
+        style={{
+          textAlign: "center",
+          marginBottom: "1.5rem",
+          fontFamily: '"Press Start 2P", cursive', // Arcade-style font
+        //   color: "#333",
+        }}
+      >
+        Email Composer & Generator
+      </h1>
 
       <Grid>
-        <Grid.Col span={{ base: 12, md: 4 }}>
-          <div className="arcade-panel company-list">
-            <Text className="arcade-font" size="lg">
-              Companies
-            </Text>
-            {data && data.length > 0 ? (
-              data.map((company: any, index: number) => (
-                <button
-                  key={index}
-                  className="company-item"
-                  onClick={() => setCompanyName(company.name)}
-                >
-                  <Text weight={600} size="lg">
-                    {company.name}
-                  </Text>
-                  <Text size="sm">
-                    <strong>Email:</strong> {company.email}
-                  </Text>
-                  <Text size="sm">
-                    <strong>Size:</strong> {company.size}
-                  </Text>
-                  <Text size="sm">
-                    <strong>Location:</strong> {company.location}
-                  </Text>
-                  <Text size="sm">
-                    <strong>Industry:</strong> {company.industry}
-                  </Text>
-                </button>
-              ))
-            ) : (
-              <Text color="dimmed" align="center" mt="md">
-                No companies available
+
+      <Grid.Col gutter="lg" span={4}>
+        <div
+          style={{
+            padding: "1rem",
+            borderRadius: "8px",
+            border: "1px solid #ddd",
+            backgroundColor: "#f9fafb",
+            height: "100vh",
+          }}
+        >
+          <Text weight={600} size="lg" style={{ marginBottom: "0.5rem" }}>
+            Companies
+          </Text>
+          {data &&
+            data.map((company, index) => (
+              <Button
+                key={index}
+                fullWidth
+                variant="light"
+                style={{
+                  padding: "1rem",
+                  borderRadius: "8px",
+                  border: "1px solid #ddd",
+                  backgroundColor: "#f9fafb",
+                  marginBottom: "1rem",
+                  textAlign: "left",
+                }}
+                onClick={() => setCompanyName(company.name)}
+              >
+                <Text weight={600} size="lg">{company.name}</Text>
+                <Text size="sm"><strong>Email:</strong> {company.email}</Text>
+                <Text size="sm"><strong>Size:</strong> {company.size}</Text>
+                <Text size="sm"><strong>Location:</strong> {company.location}</Text>
+                <Text size="sm"><strong>Industry:</strong> {company.industry}</Text>
+              </Button>
+            ))}
+        </div>
+    </Grid.Col>
+
+        <Grid.Col span={8}>
+
+        <Tabs value={activeTab} onChange={setActiveTab}>
+        <Tabs.List>
+          <Tabs.Tab value="compose">Compose Email</Tabs.Tab>
+          <Tabs.Tab value="generate">Generate Content</Tabs.Tab>
+        </Tabs.List>
+
+
+        <Tabs.Panel value="generate" pt="md">
+          <div style={{ marginBottom: "1.5rem" }}>
+            <TextInput
+              label="Company Name"
+              placeholder="Enter company name"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              required
+              style={{ marginBottom: "1rem" }}
+            />
+
+            <Button
+              size="md"
+              onClick={handleGenerateEmail}
+              loading={isLoading}
+              disabled={isLoading || !companyName}
+              style={{ marginBottom: "1rem" }}
+            >
+              Generate Email
+            </Button>
+
+            {error && (
+              <Text color="red" size="sm" style={{ marginTop: "0.5rem" }}>
+                {error}
               </Text>
             )}
           </div>
-        </Grid.Col>
 
-        <Grid.Col span={{ base: 12, md: 8 }}>
-          <div className="arcade-panel">
-            <Tabs value={activeTab} onChange={setActiveTab}>
-              <Tabs.List>
-                <Tabs.Tab value="compose">Compose Email</Tabs.Tab>
-                <Tabs.Tab value="generate">Generate Content</Tabs.Tab>
-              </Tabs.List>
+          <Text weight={600} size="lg" style={{ marginBottom: "0.5rem" }}>
+            Generated Email:
+          </Text>
 
-              <Tabs.Panel value="generate" pt="md">
-                <Stack spacing="md">
-                  <TextInput
-                    label="Company Name"
-                    placeholder="Enter company name"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    required
-                  />
+          <Card
+            shadow="sm"
+            p="lg"
+            style={{
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+              marginBottom: "1rem",
+            }}
+          >
+            {isLoading ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "2rem",
+                }}
+              >
+                <Loader size="lg" />
+                <Text style={{ marginTop: "1rem" }}>
+                  Generating email... This may take a minute...
+                </Text>
+              </div>
+            ) : (
+              <div style={{ whiteSpace: "pre-line" }}>{emailContent}</div>
+            )}
+          </Card>
 
-                  <Button
-                    onClick={handleGenerateEmail}
-                    loading={isLoading}
-                    disabled={isLoading || !companyName}
-                  >
-                    Generate Email
-                  </Button>
+          <Group position="right" pd="md" m="md">
+            <Button
+              color="blue"
+              size="lg"
+              onClick={() => {
+                setBody(emailContent);
+                setActiveTab("compose");
+              }}
+            >
+              Use This Email
+            </Button>
+          </Group>
+          <Divider/>
+          <Text weight={600} size="lg" style={{ marginBottom: "0.5rem" }}>
+            Provide Feedback:
+          </Text>
 
-                  {error && (
-                    <Text color="red" size="sm">
-                      {error}
-                    </Text>
-                  )}
+          <Textarea
+            placeholder="Write your feedback here..."
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            minRows={6}
+            style={{ marginBottom: "1rem" }}
+          />
 
-                  <Text className="arcade-font" size="lg">
-                    Generated Email:
-                  </Text>
+          <Button
+            onClick={handleFeedbackSubmit}
+            disabled={!feedback.trim()}
+          >
+            Submit Feedback
+          </Button>
+        </Tabs.Panel>
+        <Tabs.Panel value="compose" pt="md">
+          <Stack spacing="md" style={{ width: "100%" }}>
+            <Group position="apart">
+              <Text style={{ width: "60px" }}>To: </Text>
+              <TextInput
+                placeholder="Recipients"
+                style={{ flex: 1 }}
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+              />
+            </Group>
 
-                  <Card shadow="sm" padding="md">
-                    {isLoading ? (
-                      <div className="loader-container">
-                        <Loader size="md" />
-                        <Text mt="md">
-                          Generating email... This may take a minute...
-                        </Text>
-                      </div>
-                    ) : (
-                      <div className="email-content">{emailContent}</div>
-                    )}
-                  </Card>
+            <Group position="apart">
+              <Text style={{ width: "60px" }}>Cc: </Text>
+              <TextInput
+                placeholder="Carbon copy"
+                style={{ flex: 1 }}
+                value={cc}
+                onChange={(e) => setCc(e.target.value)}
+              />
+            </Group>
 
-                  <Group position="right">
-                    <Button
-                      onClick={() => {
-                        setBody(emailContent);
-                        setActiveTab("compose");
-                      }}
-                    >
-                      Use This Email
-                    </Button>
-                  </Group>
+            <Group position="apart">
+              <Text style={{ width: "60px" }}>Subject: </Text>
+              <TextInput
+                placeholder="Subject line"
+                style={{ flex: 1 }}
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
+            </Group>
 
-                  <Divider my="sm" />
+            <Text>Body:</Text>
+            <Textarea
+              placeholder="Email body"
+              autosize
+              minRows={15}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              style={{ border: "1px solid #ddd" }}
+            />
 
-                  <Text className="arcade-font" size="lg">
-                    Provide Feedback:
-                  </Text>
+            <Group position="right">
+              <Button variant="outline">
+                Cancel
+              </Button>
+              <Button onClick={handleSendEmail}>
+                Send
+              </Button>
+            </Group>
+          </Stack>
+        </Tabs.Panel>
 
-                  <Textarea
-                    placeholder="Write your feedback here..."
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    minRows={4}
-                  />
+        
+      </Tabs>
+         
 
-                  <Group position="right">
-                    <Button
-                      onClick={handleFeedbackSubmit}
-                      disabled={!feedback.trim()}
-                    >
-                      Submit Feedback
-                    </Button>
-                  </Group>
-                </Stack>
-              </Tabs.Panel>
-
-              <Tabs.Panel value="compose" pt="md">
-                <Stack spacing="md">
-                  <Group>
-                    <Text style={{ width: "60px" }}>To: </Text>
-                    <TextInput
-                      placeholder="Recipients"
-                      style={{ flex: 1 }}
-                      value={to}
-                      onChange={(e) => setTo(e.target.value)}
-                    />
-                  </Group>
-
-                  <Group>
-                    <Text style={{ width: "60px" }}>Cc: </Text>
-                    <TextInput
-                      placeholder="Carbon copy"
-                      style={{ flex: 1 }}
-                      value={cc}
-                      onChange={(e) => setCc(e.target.value)}
-                    />
-                  </Group>
-
-                  <Group>
-                    <Text style={{ width: "60px" }}>Subject: </Text>
-                    <TextInput
-                      placeholder="Subject line"
-                      style={{ flex: 1 }}
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                    />
-                  </Group>
-
-                  <Text>Body:</Text>
-                  <Textarea
-                    placeholder="Email body"
-                    autosize
-                    minRows={12}
-                    value={body}
-                    onChange={(e) => setBody(e.target.value)}
-                  />
-
-                  <Group position="right">
-                    <Button variant="outline" onClick={() => navigate('/')}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleSendEmail}>Send</Button>
-                  </Group>
-                </Stack>
-              </Tabs.Panel>
-            </Tabs>
-          </div>
-        </Grid.Col>
+         </Grid.Col>
       </Grid>
+
+      
     </Container>
+    </>
   );
+
+
 }

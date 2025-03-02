@@ -20,3 +20,12 @@ async function getCompanies(params = {}) {
 }
 
 export default getCompanies
+// TODO
+export function sendEmail(emailData) {
+
+  return axios.post('http://localhost:8000/api/', emailData, {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+}
