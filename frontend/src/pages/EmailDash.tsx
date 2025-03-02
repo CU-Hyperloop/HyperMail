@@ -1,5 +1,5 @@
 import ListCompanies from "../components/ListCompanies"
-import MailEditor from "./DraftMail"
+import MailEditor from "./Dashboard"
 import { TextInput, Button, Container, Stack, Group, Textarea, Text, Divider, Grid } from '@mantine/core';
 import { useLocation } from "react-router";
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Code, Text, TextInput, Textarea, Autocomplete, Alert, Box, Loader } from '@mantine/core';
 import { hasLength, useForm } from '@mantine/form';
 import {industries, companySizes, emailVibes} from '../data/formData';
@@ -11,6 +11,7 @@ export default function Form() {
 
     const [loading, setLoading] = useState(false);
     const [apiResponse, setApiResponse] = useState<any>(null);
+    const [companies, setCompanies] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
     
     const form = useForm({
@@ -44,18 +45,22 @@ export default function Form() {
       
       try {
         const response = await getCompanies(data);
-        console.log('API response:', response);
-        setApiResponse(response);
-      } catch (err: any) {
+        console.log('API response:', response.companies);
+        setCompanies(response.companies);  // Set companies here
+    } catch (err: any) {
         setError(err.message || 'An error occurred while calling the OpenAI API');
-      } finally {
+    } finally {
         setLoading(false);
-        if (apiResponse){
-            console.log('navigate')
-            navigate('/dashboard', { state: { data: apiResponse } });
-        }
-      }
-    };
+    }
+};
+
+// Effect to navigate once companies state is updated
+useEffect(() => {
+    if (companies !== null) {
+        console.log('Navigating with companies:', companies);
+        navigate('/dashboard', { state: { data: companies } });
+    }
+}, [companies, navigate]);
     
     return (
       <>
@@ -93,7 +98,7 @@ export default function Form() {
               <Box mt="xl">
                 <Text fw={700} size="lg">OpenAI API Response:</Text>
                 <Code block mt="md" style={{ whiteSpace: 'pre-wrap', textAlign: 'left' }}>
-                  {apiResponse}
+                  {companies}
                 </Code>
               </Box>
             )}

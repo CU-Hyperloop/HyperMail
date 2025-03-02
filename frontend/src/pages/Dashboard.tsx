@@ -14,8 +14,13 @@ import {
 import { useNavigate } from "react-router";
 import { useState, useEffect, useRef } from "react";
 import generateEmail from "../services/emailServices";
+import { useLocation } from "react-router";
 
-export default function IntegratedEmailEditor() {
+export default function Dashboard() {
+
+    const location = useLocation();
+    const { data } = location.state || {};
+    console.log('Data from state:', data);
   // Combined state from both components
   const [companyName, setCompanyName] = useState("");
   const [to, setTo] = useState("");
