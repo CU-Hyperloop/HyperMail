@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Route, Routes,  } from 'react-router';
 import Home from './pages/Home';
 import EmailGenerator from './pages/EmailGenerator';
 import DraftMail from './pages/DraftMail';
+import Test from './pages/test';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/" element={<Home/>}/>
         <Route path="/generate" element={<EmailGenerator/>}/>
         <Route path="/draft" element={<DraftMail/>}/>
+        <Route path="/test" element={<Test/>}/>
       </Routes>
     </Router>
   </MantineProvider>

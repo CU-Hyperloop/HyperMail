@@ -1,12 +1,18 @@
 from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+import os
+
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
 from .models import Company, Template, Email, Prompt
 from .serializers import *
+from .test import EmailGenerator 
+
 import os
 
 from .services.generateEmails import GenerateEmails
@@ -205,5 +211,60 @@ class PromptViewSet(viewsets.ModelViewSet):
     search_fields = ['text', 'link']
     ordering_fields = ['created_at', 'type']
 
+    @action(detail=False, methods=['post'])
+    def generate_email(self, request):
+        """
+        API endpoint to generate an email based on company name and other parameters.
+        """
+        try:
+            # Get company name from request data
+            print(f"Received request: {request.data}")
+            company_name = request.data.get('company_name')
+            company_name = "hydro engineering consultant"
+            if not company_name:
+                return Response(
+                    {"error": "Company name is required"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            print("generating info for company");            
+            # Set paths to your files 
+            SPONSORSHIP_PACKET_PATH = "./data/sponsorShipPacket.pdf"
+            FDP_PATH = "./data/fdp.pdf"
+            EMAIL_TEMPLATE_PATH = "./data/emailTemplates.pdf"
+
+            import os
+            # Check if files exist
+            print(f"Sponsorship packet exists: {os.path.exists(SPONSORSHIP_PACKET_PATH)}")
+            print(f"FDP exists: {os.path.exists(FDP_PATH)}")
+            print(f"Email template exists: {os.path.exists(EMAIL_TEMPLATE_PATH)}")
+           
+            # Initialize the email generator
+            try:
+                email_generator = EmailGenerator()
+                print("Successfully created EmailGenerator instance")
+            except Exception as e:
+                error_msg = f"Failed to initialize EmailGenerator: {str(e)}"
+                print(f"Error: {error_msg}")
+                return Response(
+                    {"error": error_msg}, 
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+                
+            # Generate the email
+            response_email = email_generator.sponsorship_email_workflow(
+                company_name=company_name,
+                sponsorship_packet_path=SPONSORSHIP_PACKET_PATH,
+                fdp_path=FDP_PATH,
+                email_template_path=EMAIL_TEMPLATE_PATH
+            )
+            
+            # Return the generated email
+            return Response({"email": response_email}, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
