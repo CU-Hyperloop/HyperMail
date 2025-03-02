@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 
 from .models import Company, Template, Email, Prompt
 from .serializers import *
+import os
 
 class CompanyViewSet(viewsets.ModelViewSet):
     """
@@ -115,3 +116,6 @@ class PromptViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['text', 'link']
     ordering_fields = ['created_at', 'type']
+
+
+
