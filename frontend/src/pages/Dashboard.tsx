@@ -11,7 +11,8 @@ import {
   Tabs,
   Divider,
   Grid,
-  Col
+  Col,
+  Switch
 } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
@@ -38,14 +39,11 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("generate");
   
-  // Add new state for the visualization popup
+  // Visualizer states
   const [visualizerOpen, setVisualizerOpen] = useState(false);
-  
-  // New state to track if generation is still in progress for visualizer
   const [isGenerating, setIsGenerating] = useState(false);
-  
-  // Track if we should keep visualizer open after completion
   const [keepVisualizerOpen, setKeepVisualizerOpen] = useState(false);
+  const [preferArcadeMode, setPreferArcadeMode] = useState(false);
 
   const handleCompanyClick = (company: any) => {
     // Set the company name for email generation
@@ -223,13 +221,31 @@ export default function Dashboard() {
 
               <Tabs.Panel value="generate" pt="md">
                 <Stack spacing="md">
-                  <TextInput
-                    label="Company Name"
-                    placeholder="Enter company name"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    required
-                  />
+                  <Group position="apart" align="center">
+                    <TextInput
+                      label="Company Name"
+                      placeholder="Enter company name"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      required
+                      style={{ flex: 1 }}
+                    />
+                    
+                    <div className="arcade-mode-toggle">
+                      <Switch
+                        label="Arcade Mode"
+                        checked={preferArcadeMode}
+                        onChange={(event) => setPreferArcadeMode(event.currentTarget.checked)}
+                        styles={{
+                          label: {
+                            color: 'var(--pacman-yellow)',
+                            fontFamily: '"Press Start 2P", cursive',
+                            fontSize: '0.7rem'
+                          }
+                        }}
+                      />
+                    </div>
+                  </Group>
 
                   <Button
                     onClick={handleGenerateEmail}
