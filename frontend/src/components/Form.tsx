@@ -1,12 +1,20 @@
 import { useState } from 'react';
 import { Button, Code, Text, TextInput, Textarea, Autocomplete } from '@mantine/core';
 import { hasLength, isEmail, useForm } from '@mantine/form';
-import { Autocomplete as GoogleAutocomplete } from '@react-google-maps/api';
 
-
-
+import { useNavigate } from 'react-router';
 
 export default function Form() {
+
+    const navigate = useNavigate();
+
+    const handleSubmit = (values: any) => {
+        console.log(values);
+
+        // call api here
+
+        navigate('/draft');
+    }
 
     const form = useForm({
         mode: 'controlled',
@@ -28,7 +36,7 @@ export default function Form() {
             <Autocomplete {...form.getInputProps('vibe')} data = {emailVibes} mt="md" label="Email Vibe" placeholder="Vibe" />
             <Textarea {...form.getInputProps('details')} mt="md" label="Customize" placeholder="Customize your email..." />
             
-            <Button type="submit" mt="md">
+            <Button type="submit" mt="md" onClick={handleSubmit}>
                 Submit
             </Button>
         
