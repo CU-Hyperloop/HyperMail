@@ -10,8 +10,10 @@ class Company(models.Model):
     ]
     
     name = models.TextField(null=False, blank=False)  # Required field
-    email = models.TextField(unique=True, blank=True, null=True)
     website = models.TextField(blank=True, null=True)
+    email = models.TextField(unique=True, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)  # Add this field
+    contact_person = models.TextField(blank=True, null=True)
     industry = models.TextField(blank=True, null=True)
     location = models.TextField(blank=True, null=True)
     size = models.TextField(blank=True, null=True)

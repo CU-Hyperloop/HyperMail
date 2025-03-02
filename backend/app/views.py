@@ -68,13 +68,16 @@ class EmailGeneratorViewSet(viewsets.ViewSet):
                         # Create new company
                         new_company = Company(
                             name=company_data.get('name', ''),
-                            email=company_data.get('email', ''),
                             website=company_data.get('website', ''),
+                            email=company_data.get('email', ''),
+                            description=company_data.get('description', ''),
+                            contact_person=company_data.get('contact_person', ''),
                             industry=company_data.get('industry', params.get('industry', '')),
                             location=company_data.get('location', params.get('location', '')),
                             size=company_data.get('size', params.get('size', '')),
                             type=company_type
                         )
+
                         new_company.save()
                         saved_companies.append(company_data.get('name'))
                     except Exception as e:

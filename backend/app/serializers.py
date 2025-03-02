@@ -10,7 +10,7 @@ class CompanySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Company
-        fields = ['id', 'name', 'email', 'website', 'industry', 'location', 'size', 'added_at', 'type']
+        fields = "__all__" 
         read_only_fields = ['id', 'added_at']
     
     def validate(self, data):
@@ -29,7 +29,7 @@ class TemplateSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Template
-        fields = ['id', 'subject', 'body', 'type', 'created_at']
+        fields = "__all__" 
         read_only_fields = ['id', 'created_at']
 
 
@@ -42,8 +42,7 @@ class EmailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Email
-        fields = ['id', 'company', 'company_name', 'template', 'template_subject', 
-                 'sent_at', 'subject', 'body', 'status', 'type']
+        fields = "__all__" 
         read_only_fields = ['id', 'sent_at']
 
 class PromptSerializer(serializers.ModelSerializer):
@@ -53,7 +52,7 @@ class PromptSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Prompt
-        fields = ['id', 'text', 'type', 'link', 'created_at']
+        fields = "__all__" 
         read_only_fields = ['id', 'created_at']
 
 
@@ -69,7 +68,7 @@ class EmailDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Email
-        fields = ['id', 'company', 'template', 'sent_at', 'subject', 'body', 'status', 'type']
+        fields = "__all__" 
         read_only_fields = ['id', 'sent_at']
     
     def create(self, validated_data):
@@ -101,8 +100,7 @@ class CompanyDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Company
-        fields = ['id', 'name', 'email', 'website', 'industry', 'location', 
-                 'size', 'added_at', 'type', 'emails', 'emails_count']
+        fields = "__all__" 
         read_only_fields = ['id', 'added_at', 'emails_count']
     
     def get_emails_count(self, obj):
@@ -122,7 +120,7 @@ class TemplateDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Template
-        fields = ['id', 'subject', 'body', 'type', 'created_at', 'emails', 'emails_count']
+        fields = "__all__" 
         read_only_fields = ['id', 'created_at', 'emails_count']
     
     def get_emails_count(self, obj):
