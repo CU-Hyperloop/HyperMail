@@ -10,4 +10,5 @@ django_extensions
 psycopg2-binary
 python-dotenv
 langchain_google_genai
+langchain_community
 google-generativeai

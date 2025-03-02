@@ -8,5 +8,5 @@ docker exec -it backend python manage.py makemigrations app
 
 Apply the migration:
 ```
-docker exec -it backend python manage.py makemigrations app
+docker exec -it backend python manage.py migrate
 ```
