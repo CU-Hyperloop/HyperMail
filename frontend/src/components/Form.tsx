@@ -102,8 +102,8 @@ export default function Form() {
               </Box>
             )}
             
-            <Text mt="md">Form values:</Text>
-            <Code block>{JSON.stringify(form.values, null, 2)}</Code>
+            {/* <Text mt="md">Form values:</Text>
+            <Code block>{JSON.stringify(form.values, null, 2)}</Code> */}
         </form>
       </>
     );

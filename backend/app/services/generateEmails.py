@@ -68,7 +68,7 @@ class GenerateEmails:
             existing_str = ", ".join(existing_companies)
         
         prompt = f"""
-        Find 3 UNIQUE companies that match these criteria:
+        Find 10 UNIQUE companies that match these criteria:
         Industry: {params.get('industry', 'Any')}
         Size: {params.get('size', 'Any')}
         Location: {params.get('location', 'Any')}

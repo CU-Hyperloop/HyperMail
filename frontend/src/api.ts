@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-async function getCompanies(params = {}) {
+export default async function getCompanies(params = {}) {
   const data = {
     industry: params.industry || "Technology",
     size: params.size || "Medium",
@@ -43,5 +43,4 @@ export async function sendEmail(emailData={}) {
   }
 }
 
-export default {getCompanies,sendEmail};
-;
+// export default {getCompanies,sendEmail};
