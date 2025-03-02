@@ -46,7 +46,6 @@ class EmailSerializer(serializers.ModelSerializer):
                  'sent_at', 'subject', 'body', 'status', 'type']
         read_only_fields = ['id', 'sent_at']
 
-
 class PromptSerializer(serializers.ModelSerializer):
     """
     Serializer for the Prompt model.
