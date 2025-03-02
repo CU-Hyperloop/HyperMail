@@ -107,13 +107,16 @@ class EmailGeneratorViewSet(viewsets.ViewSet):
             )
 
     @action(detail=False, methods=['post'])
-    def send_email(self,request):
+    def send_email(self, request):
     
+
         # Fetching parameters from the request
         to_email = request.data.get('to_email', '')
         subject = request.data.get('subject', '')
         message = request.data.get('message', '')
-        cc_email = request.data.get('cc_email', '')  # Optional CC email
+        cc_email = request.data.get('cc_email', '') 
+
+        print(f"Sending email to: {to_email}, subject: {subject}, message: {message}")
 
         # Check for missing required fields
         if not to_email or not subject or not message:

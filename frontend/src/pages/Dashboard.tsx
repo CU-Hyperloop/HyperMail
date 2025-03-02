@@ -11,7 +11,6 @@ import {
   Tabs,
   Divider,
   Grid,
-  Col,
   Switch
 } from "@mantine/core";
 import { useNavigate } from "react-router";
@@ -160,7 +159,6 @@ export default function Dashboard() {
       cc_email: cc,
       message: body
     };
-    console.log("Email sent with:", params);
   
     try {
       const res = await sendEmail(params);
