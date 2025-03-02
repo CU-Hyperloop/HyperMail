@@ -46,7 +46,7 @@ export default function Form() {
       try {
         const response = await getCompanies(data);
         console.log('API response:', response.companies);
-        setCompanies(response.companies);  // Set companies here
+        setCompanies(response.companies); 
     } catch (err: any) {
         setError(err.message || 'An error occurred while calling the OpenAI API');
     } finally {
@@ -54,13 +54,12 @@ export default function Form() {
     }
 };
 
-// Effect to navigate once companies state is updated
-useEffect(() => {
-    if (companies !== null) {
-        console.log('Navigating with companies:', companies);
-        navigate('/dashboard', { state: { data: companies } });
-    }
-}, [companies, navigate]);
+    useEffect(() => {
+        if (companies !== null) {
+            console.log('Navigating with companies:', companies);
+            navigate('/dashboard', { state: { data: companies } });
+        }
+    }, [companies, navigate]);
     
     return (
       <>

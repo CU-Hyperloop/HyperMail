@@ -10,7 +10,12 @@ import {
   Card,
   Tabs,
   Divider,
+  Grid,
+  Col
+  
 } from "@mantine/core";
+
+
 import { useNavigate } from "react-router";
 import { useState, useEffect, useRef } from "react";
 import generateEmail from "../services/emailServices";
@@ -20,7 +25,7 @@ export default function Dashboard() {
 
     const location = useLocation();
     const { data } = location.state || {};
-    console.log('Data from state:', data);
+
   // Combined state from both components
   const [companyName, setCompanyName] = useState("");
   const [to, setTo] = useState("");
@@ -69,12 +74,13 @@ export default function Dashboard() {
   };
 
   return (
+    <>
+
     <Container
       size="md"
       style={{
         padding: "1.5rem",
         borderRadius: "8px",
-        // backgroundColor: "#f8f9fa", // Using a neutral background instead of red
         minHeight: "100vh",
       }}
     >
@@ -89,64 +95,55 @@ export default function Dashboard() {
         Email Composer & Generator
       </h1>
 
-      <Tabs value={activeTab} onChange={setActiveTab}>
+      <Grid>
+
+      <Grid.Col gutter="lg" span={4}>
+        <div
+          style={{
+            padding: "1rem",
+            borderRadius: "8px",
+            border: "1px solid #ddd",
+            backgroundColor: "#f9fafb",
+            height: "100vh",
+          }}
+        >
+          <Text weight={600} size="lg" style={{ marginBottom: "0.5rem" }}>
+            Companies
+          </Text>
+          {data &&
+            data.map((company, index) => (
+              <Button
+                key={index}
+                fullWidth
+                variant="light"
+                style={{
+                  padding: "1rem",
+                  borderRadius: "8px",
+                  border: "1px solid #ddd",
+                  backgroundColor: "#f9fafb",
+                  marginBottom: "1rem",
+                  textAlign: "left",
+                }}
+                onClick={() => window.open(company.website, "_blank")}
+              >
+                <Text weight={600} size="lg">{company.name}</Text>
+                <Text size="sm"><strong>Email:</strong> {company.email}</Text>
+                <Text size="sm"><strong>Size:</strong> {company.size}</Text>
+                <Text size="sm"><strong>Location:</strong> {company.location}</Text>
+                <Text size="sm"><strong>Industry:</strong> {company.industry}</Text>
+              </Button>
+            ))}
+        </div>
+    </Grid.Col>
+
+        <Grid.Col span={8}>
+
+        <Tabs value={activeTab} onChange={setActiveTab}>
         <Tabs.List>
           <Tabs.Tab value="compose">Compose Email</Tabs.Tab>
           <Tabs.Tab value="generate">Generate Content</Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="compose" pt="md">
-          <Stack spacing="md" style={{ width: "100%" }}>
-            <Group position="apart">
-              <Text style={{ width: "60px" }}>To: </Text>
-              <TextInput
-                placeholder="Recipients"
-                style={{ flex: 1 }}
-                value={to}
-                onChange={(e) => setTo(e.target.value)}
-              />
-            </Group>
-
-            <Group position="apart">
-              <Text style={{ width: "60px" }}>Cc: </Text>
-              <TextInput
-                placeholder="Carbon copy"
-                style={{ flex: 1 }}
-                value={cc}
-                onChange={(e) => setCc(e.target.value)}
-              />
-            </Group>
-
-            <Group position="apart">
-              <Text style={{ width: "60px" }}>Subject: </Text>
-              <TextInput
-                placeholder="Subject line"
-                style={{ flex: 1 }}
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-              />
-            </Group>
-
-            <Text>Body:</Text>
-            <Textarea
-              placeholder="Email body"
-              autosize
-              minRows={15}
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              style={{ border: "1px solid #ddd" }}
-            />
-
-            <Group position="right">
-              <Button variant="outline">
-                Cancel
-              </Button>
-              <Button onClick={handleSendEmail}>
-                Send
-              </Button>
-            </Group>
-          </Stack>
-        </Tabs.Panel>
 
         <Tabs.Panel value="generate" pt="md">
           <div style={{ marginBottom: "1.5rem" }}>
@@ -240,7 +237,70 @@ export default function Dashboard() {
             Submit Feedback
           </Button>
         </Tabs.Panel>
+        <Tabs.Panel value="compose" pt="md">
+          <Stack spacing="md" style={{ width: "100%" }}>
+            <Group position="apart">
+              <Text style={{ width: "60px" }}>To: </Text>
+              <TextInput
+                placeholder="Recipients"
+                style={{ flex: 1 }}
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+              />
+            </Group>
+
+            <Group position="apart">
+              <Text style={{ width: "60px" }}>Cc: </Text>
+              <TextInput
+                placeholder="Carbon copy"
+                style={{ flex: 1 }}
+                value={cc}
+                onChange={(e) => setCc(e.target.value)}
+              />
+            </Group>
+
+            <Group position="apart">
+              <Text style={{ width: "60px" }}>Subject: </Text>
+              <TextInput
+                placeholder="Subject line"
+                style={{ flex: 1 }}
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
+            </Group>
+
+            <Text>Body:</Text>
+            <Textarea
+              placeholder="Email body"
+              autosize
+              minRows={15}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              style={{ border: "1px solid #ddd" }}
+            />
+
+            <Group position="right">
+              <Button variant="outline">
+                Cancel
+              </Button>
+              <Button onClick={handleSendEmail}>
+                Send
+              </Button>
+            </Group>
+          </Stack>
+        </Tabs.Panel>
+
+        
       </Tabs>
+         
+
+         </Grid.Col>
+      </Grid>
+
+      
     </Container>
+    </>
   );
+
+
 }
