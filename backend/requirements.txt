@@ -1,0 +1,10 @@
+django
+python-decouple
+djangorestframework
+django-cors-headers
+pillow
+gunicorn
+langchain
+django-storages
+django_extensions
+psycopg2-binary
